@@ -1,0 +1,82 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Data Fetching Guide
+
+This project uses Supabase for data storage and authentication.
+
+## Server Components
+
+In server components, fetch data directly:
+
+```tsx
+// In a Server Component
+import { createServerClient } from "@/lib/supabase/server";
+
+export default async function UsersPage() {
+  const supabase = createServerClient();
+  const { data: users } = await supabase.from("users").select("*");
+  
+  return (
+    <div>
+      <h1>Users</h1>
+      <ul>
+        {users?.map(user => (
+          <li key={user.id}>{user.name}</li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+```
+
+## Client Components
+
+For client components, use hooks:
+
+```tsx
+"use client";
+
+import { useEffect, useState } from "react";
+import { createBrowserClient } from "@/lib/supabase/client";
+
+export function UserList() {
+  const [users, setUsers] = useState([]);
+  const supabase = createBrowserClient();
+  
+  useEffect(() => {
+    async function fetchUsers() {
+      const { data } = await supabase.from("users").select("*");
+      if (data) setUsers(data);
+    }
+    
+    fetchUsers();
+  }, []);
+  
+  return (
+    <ul>
+      {users.map(user => (
+        <li key={user.id}>{user.name}</li>
+      ))}
+    </ul>
+  );
+}
+```
+
+## Authentication
+
+Use Supabase authentication in protected routes:
+
+```tsx
+// Middleware checks for authentication
+import { createServerClient } from "@/lib/supabase/server";
+
+export async function userIsAuthenticated() {
+  const supabase = createServerClient();
+  const { data: { session } } = await supabase.auth.getSession();
+  return !!session;
+}
+```
+

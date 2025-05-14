@@ -1,0 +1,61 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# UI Components Guide
+
+This project uses a component-based architecture with Radix UI, shadcn/ui patterns, and Tailwind CSS.
+
+## Component Structure
+
+- Reusable UI components go in the [components/](mdc:components) directory
+- Components should be modular and composable
+- Add "use client" directive for interactive components
+
+## Component Guidelines
+
+- Use TypeScript interfaces for props
+- Use `cn()` utility for merging Tailwind classes
+- Follow the pattern of accepting className via props
+- Use Radix UI primitives for accessibility
+
+## Example Component
+
+```tsx
+"use client";
+
+import { cn } from "@/lib/utils";
+import { HTMLAttributes } from "react";
+import { Button } from "@/components/ui/button";
+
+interface CardProps extends HTMLAttributes<HTMLDivElement> {
+  title: string;
+  description?: string;
+}
+
+export function Card({ 
+  title, 
+  description, 
+  className, 
+  children, 
+  ...props 
+}: CardProps) {
+  return (
+    <div 
+      className={cn(
+        "rounded-lg border p-4 shadow-sm",
+        className
+      )} 
+      {...props}
+    >
+      <h3 className="text-lg font-medium">{title}</h3>
+      {description && (
+        <p className="text-sm text-muted-foreground">{description}</p>
+      )}
+      {children}
+    </div>
+  );
+}
+```
+

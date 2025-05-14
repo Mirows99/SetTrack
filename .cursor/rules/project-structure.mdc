@@ -1,0 +1,22 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Project Structure Guide
+
+This is a Next.js 15 project using the App Router, React 19, TypeScript, and Tailwind CSS.
+
+## Key Files and Directories
+
+- [app/layout.tsx](mdc:app/layout.tsx) - Main layout wrapper with providers
+- [app/page.tsx](mdc:app/page.tsx) - Homepage component
+- [components/](mdc:components) - Reusable UI components
+- [lib/](mdc:lib) - Utility functions and shared code
+- [hooks/](mdc:hooks) - Custom React hooks
+- [app/auth/](mdc:app/auth) - Authentication related routes
+- [app/protected/](mdc:app/protected) - Routes requiring authentication
+- [middleware.ts](mdc:middleware.ts) - Next.js middleware for route protection
+
+
+In the /app holder there should be as low amount of logic as possible. These page.tsx files are just used for routing. All features should be stored elsewhere and just used as imports

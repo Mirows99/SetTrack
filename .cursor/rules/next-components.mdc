@@ -1,0 +1,56 @@
+---
+description: 
+globs: 
+alwaysApply: false
+---
+# Next.js Components Guide
+
+## Routing Structure
+
+Next.js uses the App Router, where:
+- Folders define routes
+- `page.tsx` files are publicly accessible routes
+- `layout.tsx` files wrap child routes
+- `route.ts` files define API endpoints
+
+## Component Guidelines
+
+- Keep page components in respective route folders
+- Use Server Components by default (no "use client" directive)
+- Add "use client" directive when using hooks or browser APIs
+- Export page components as default exports
+
+## Example Page Component
+
+```tsx
+// Example page component
+export default function DashboardPage() {
+  return (
+    <div className="container py-6">
+      <h1 className="text-2xl font-bold">Dashboard</h1>
+      {/* Content */}
+    </div>
+  );
+}
+```
+
+## Example Layout Component
+
+```tsx
+// Example layout component
+import { ReactNode } from "react";
+
+export default function DashboardLayout({
+  children,
+}: {
+  children: ReactNode;
+}) {
+  return (
+    <section className="dashboard-layout">
+      {/* Nav, sidebar, etc. */}
+      <main>{children}</main>
+    </section>
+  );
+}
+```
+
