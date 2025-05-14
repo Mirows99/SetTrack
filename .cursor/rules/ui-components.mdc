@@ -1,7 +1,7 @@
 ---
 description: 
 globs: 
-alwaysApply: false
+alwaysApply: true
 ---
 # UI Components Guide
 
@@ -15,6 +15,8 @@ This project uses a component-based architecture with Radix UI, shadcn/ui patter
 
 ## Component Guidelines
 
+- If possible use the shadcn components at @components/ui
+- Before thinking about writing yourself a new ui component check if there is already a existing one
 - Use TypeScript interfaces for props
 - Use `cn()` utility for merging Tailwind classes
 - Follow the pattern of accepting className via props

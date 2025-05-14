@@ -1,7 +1,7 @@
 ---
 description: 
 globs: 
-alwaysApply: false
+alwaysApply: true
 ---
 # Project Structure Guide
 
@@ -19,4 +19,6 @@ This is a Next.js 15 project using the App Router, React 19, TypeScript, and Tai
 - [middleware.ts](mdc:middleware.ts) - Next.js middleware for route protection
 
 
-In the /app holder there should be as low amount of logic as possible. These page.tsx files are just used for routing. All features should be stored elsewhere and just used as imports
+In the @app holder there should be as low amount of logic as possible. These page.tsx files are just used for routing and styling. All features should be stored elsewhere and just used as imports. 
+
+Every page after the athorization is supposed to be in @app/protected
