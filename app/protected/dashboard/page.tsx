@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import DashboardHeader from '@/components/dashboard/header'
+import ConditionalHeader from '@/components/dashboard/conditional-header'
 import WorkoutHistory from '@/components/dashboard/workout-history'
 import WorkoutStats from '@/components/dashboard/workout-stats'
 import ExerciseLibrary from '@/components/dashboard/exercise-library'
@@ -16,7 +16,7 @@ export default async function GymDashboardPage() {
 
   return (
     <div className="container py-6 space-y-8">
-      <DashboardHeader user={data.user} />
+      <ConditionalHeader user={data.user} />
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <WorkoutStats />
