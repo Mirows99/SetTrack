@@ -12,6 +12,7 @@ This project uses a component-based architecture with Radix UI, shadcn/ui patter
 - Reusable UI components go in the [components/](mdc:components) directory
 - Components should be modular and composable
 - Add "use client" directive for interactive components
+- First priority in UI is Mobile. Web is less important
 
 ## Component Guidelines
 
