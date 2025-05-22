@@ -2,12 +2,13 @@
 
 import { ReactNode } from 'react'
 import { useIsMobile } from '@/hooks/use-mobile'
+import BottomTabNavigation from '@/components/dashboard/bottom-tab-navigation'
 
-interface ProtectedLayoutProps {
+interface DashboardLayoutProps {
   children: ReactNode
 }
 
-export default function ProtectedLayout({ children }: ProtectedLayoutProps) {
+export default function DashboardLayout({ children }: DashboardLayoutProps) {
   const isMobile = useIsMobile()
 
   return (
@@ -20,9 +21,16 @@ export default function ProtectedLayout({ children }: ProtectedLayoutProps) {
         </div>
       )}
       
-      <main className={`flex-1`}>
+      <main className={`flex-1 pb-16 md:pb-0 ${isMobile ? 'pt-12' : ''}`}>
         {children}
       </main>
+
+      {/* Mobile bottom navigation */}
+      {isMobile && (
+        <div className="fixed bottom-0 left-0 right-0 z-40 w-full border-t bg-background/80 backdrop-blur-sm shadow-sm">
+          <BottomTabNavigation />
+        </div>
+      )}
     </div>
   )
 } 

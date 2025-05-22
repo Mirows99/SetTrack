@@ -3,6 +3,7 @@
 import { User } from '@supabase/supabase-js'
 import { useIsMobile } from '@/hooks/use-mobile'
 import DashboardHeader from '@/components/dashboard/header'
+import MobileHeader from '@/components/dashboard/mobile-header'
 
 interface ConditionalHeaderProps {
   user: User
@@ -12,7 +13,7 @@ export default function ConditionalHeader({ user }: ConditionalHeaderProps) {
   const isMobile = useIsMobile()
   
   if (isMobile) {
-    return null
+    return <MobileHeader user={user} />
   }
   
   return <DashboardHeader user={user} />

@@ -1,6 +1,6 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
-import DashboardHeader from '@/components/dashboard/header'
+import ConditionalHeader from '@/components/dashboard/conditional-header'
 import WorkoutList from '@/components/dashboard/workout-list'
 import WorkoutFilters from '@/components/dashboard/workout-filters'
 import CreateWorkoutButton from '@/components/dashboard/create-workout-button'
@@ -15,7 +15,7 @@ export default async function WorkoutsPage() {
 
   return (
     <div className="container py-6 space-y-8">
-      <DashboardHeader user={data.user} />
+      <ConditionalHeader user={data.user} />
       
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
