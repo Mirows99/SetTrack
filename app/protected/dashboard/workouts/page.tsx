@@ -37,7 +37,7 @@ export default async function WorkoutsPage() {
             </p>
           </div>
           <Button asChild className="mt-6 w-full">
-            <Link href="/protected/dashboard/workouts/quick-start">Start Empty Workout</Link>
+            <Link href="/protected/dashboard/workouts/quick-start">Start Workout</Link>
           </Button>
         </div>
 
