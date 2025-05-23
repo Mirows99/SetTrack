@@ -17,6 +17,24 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet"
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { useForm } from "react-hook-form"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { z } from "zod"
 
 type Exercise = {
   id: string
@@ -36,6 +54,23 @@ type Set = {
   notes?: string
 }
 
+const setFormSchema = z.object({
+  weight: z.string().min(1, "Weight is required").refine((val) => {
+    const num = parseFloat(val)
+    return !isNaN(num) && num > 0
+  }, "Weight must be a positive number"),
+  reps: z.string().min(1, "Reps is required").refine((val) => {
+    const num = parseInt(val)
+    return !isNaN(num) && num > 0
+  }, "Reps must be a positive number"),
+  intensity: z.enum(["Warm Up", "Low", "Moderate", "High", "Failure"], {
+    required_error: "Please select an intensity level",
+  }),
+  notes: z.string().optional(),
+})
+
+type SetFormValues = z.infer<typeof setFormSchema>
+
 export default function ExercisePage({ params }: { params: Promise<{ id: string }> }) {
   const [isLoading, setIsLoading] = useState(true)
   const [exercise, setExercise] = useState<Exercise | null>(null)
@@ -43,16 +78,18 @@ export default function ExercisePage({ params }: { params: Promise<{ id: string 
   const [isSheetOpen, setIsSheetOpen] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   
-  // Form state for new set
-  const [formData, setFormData] = useState({
-    weight: '',
-    reps: '',
-    intensity: 'Moderate',
-    notes: ''
-  })
-  
   const resolvedParams = use(params)
   const exerciseId = resolvedParams.id
+
+  const form = useForm<SetFormValues>({
+    resolver: zodResolver(setFormSchema),
+    defaultValues: {
+      weight: '',
+      reps: '',
+      intensity: 'Moderate',
+      notes: ''
+    }
+  })
 
   useEffect(() => {
     async function fetchData() {
@@ -104,11 +141,8 @@ export default function ExercisePage({ params }: { params: Promise<{ id: string 
     fetchData()
   }, [exerciseId])
 
-  const handleSaveSet = async () => {
-    if (!exercise || !formData.weight || !formData.reps) {
-      alert('Please fill in weight and reps')
-      return
-    }
+  const onSubmit = async (values: SetFormValues) => {
+    if (!exercise) return
 
     setIsSaving(true)
     
@@ -119,10 +153,10 @@ export default function ExercisePage({ params }: { params: Promise<{ id: string 
         .from('sets')
         .insert({
           exercise: exerciseId,
-          weight: parseFloat(formData.weight),
-          reps: parseInt(formData.reps),
-          intensity: formData.intensity,
-          notes: formData.notes || null
+          weight: parseFloat(values.weight),
+          reps: parseInt(values.reps),
+          intensity: values.intensity,
+          notes: values.notes || null
         })
       
       if (error) {
@@ -143,12 +177,7 @@ export default function ExercisePage({ params }: { params: Promise<{ id: string 
       }
       
       // Reset form and close sheet
-      setFormData({
-        weight: '',
-        reps: '',
-        intensity: 'Moderate',
-        notes: ''
-      })
+      form.reset()
       setIsSheetOpen(false)
       
     } catch (error) {
@@ -157,13 +186,6 @@ export default function ExercisePage({ params }: { params: Promise<{ id: string 
     } finally {
       setIsSaving(false)
     }
-  }
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: value
-    }))
   }
 
   if (isLoading) {
@@ -287,77 +309,108 @@ export default function ExercisePage({ params }: { params: Promise<{ id: string 
             <SheetTitle>Record New Set</SheetTitle>
             <SheetDescription>Add details of your current set</SheetDescription>
           </SheetHeader>
-          <div className="space-y-4 py-4">
-            <div className="grid grid-cols-3 gap-4">
-              <div>
-                <label htmlFor="weight" className="text-sm font-medium mb-1 block">Weight (lbs)</label>
-                <Input 
-                  id="weight" 
-                  type="number" 
-                  placeholder="135" 
-                  autoFocus={false}
-                  value={formData.weight}
-                  onChange={(e) => handleInputChange('weight', e.target.value)}
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 py-4">
+              <div className="grid grid-cols-3 gap-4">
+                <FormField
+                  control={form.control}
+                  name="weight"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Weight (lbs)</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="number" 
+                          placeholder="135" 
+                          autoFocus={false}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="reps"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Reps</FormLabel>
+                      <FormControl>
+                        <Input 
+                          type="number" 
+                          placeholder="8" 
+                          autoFocus={false}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="intensity"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Intensity</FormLabel>
+                      <Select onValueChange={field.onChange} defaultValue={field.value}>
+                        <FormControl>
+                          <SelectTrigger>
+                            <SelectValue placeholder="Select intensity" />
+                          </SelectTrigger>
+                        </FormControl>
+                        <SelectContent>
+                          <SelectItem value="Warm Up">Warm Up</SelectItem>
+                          <SelectItem value="Low">Low</SelectItem>
+                          <SelectItem value="Moderate">Moderate</SelectItem>
+                          <SelectItem value="High">High</SelectItem>
+                          <SelectItem value="Failure">Failure</SelectItem>
+                        </SelectContent>
+                      </Select>
+                      <FormMessage />
+                    </FormItem>
+                  )}
                 />
               </div>
-              <div>
-                <label htmlFor="reps" className="text-sm font-medium mb-1 block">Reps</label>
-                <Input 
-                  id="reps" 
-                  type="number" 
-                  placeholder="8" 
-                  autoFocus={false}
-                  value={formData.reps}
-                  onChange={(e) => handleInputChange('reps', e.target.value)}
-                />
-              </div>
-              <div>
-                <label htmlFor="intensity" className="text-sm font-medium mb-1 block">Intensity</label>
-                <select
-                  id="intensity"
-                  className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
-                  autoFocus={false}
-                  value={formData.intensity}
-                  onChange={(e) => handleInputChange('intensity', e.target.value)}
-                >
-                  <option value="Warm Up">Warm Up</option>
-                  <option value="Low">Low</option>
-                  <option value="Moderate">Moderate</option>
-                  <option value="High">High</option>
-                  <option value="Failure">Failure</option>
-                </select>
-              </div>
-            </div>
-            <div>
-              <label htmlFor="notes" className="text-sm font-medium mb-1 block">Notes (optional)</label>
-              <Input 
-                id="notes" 
-                placeholder="Add any notes about this set" 
-                autoFocus={false}
-                value={formData.notes}
-                onChange={(e) => handleInputChange('notes', e.target.value)}
+              <FormField
+                control={form.control}
+                name="notes"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Notes (optional)</FormLabel>
+                    <FormControl>
+                      <Input 
+                        placeholder="Add any notes about this set" 
+                        autoFocus={false}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
               />
-            </div>
-          </div>
-          <SheetFooter>
-            <Button 
-              className="w-full" 
-              onClick={handleSaveSet}
-              disabled={isSaving || !formData.weight || !formData.reps}
-            >
-              {isSaving ? (
-                <>
-                  <div className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-b-transparent" />
-                  Saving...
-                </>
-              ) : (
-                <>
-                  <Plus className="h-4 w-4 mr-2" />
-                  Save Set
-                </>
-              )}
-            </Button>
-          </SheetFooter>
+              <SheetFooter>
+                <Button 
+                  type="submit"
+                  className="w-full" 
+                  disabled={isSaving}
+                >
+                  {isSaving ? (
+                    <>
+                      <div className="h-4 w-4 mr-2 animate-spin rounded-full border-2 border-b-transparent" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Plus className="h-4 w-4 mr-2" />
+                      Save Set
+                    </>
+                  )}
+                </Button>
+              </SheetFooter>
+            </form>
+          </Form>
         </SheetContent>
       </Sheet>
     </div>
