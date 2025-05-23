@@ -2,8 +2,8 @@
 
 import { User } from '@supabase/supabase-js'
 import { useIsMobile } from '@/hooks/use-mobile'
-import DashboardHeader from '@/components/dashboard/header'
-import MobileHeader from '@/components/dashboard/mobile-header'
+import DashboardHeader from './header'
+import MobileHeader from './mobile-header'
 
 interface ConditionalHeaderProps {
   user: User

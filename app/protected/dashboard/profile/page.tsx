@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import ConditionalHeader from '@/components/dashboard/conditional-header'
-import ProfileForm from '@/components/dashboard/profile-form'
+import { ProfileForm } from '@/features/profile'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 
 export default async function ProfilePage() {

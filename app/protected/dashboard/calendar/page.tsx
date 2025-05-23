@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import ConditionalHeader from '@/components/dashboard/conditional-header'
-import CalendarContent from '@/components/dashboard/calendar-content'
+import { CalendarContent } from '@/features/calendar'
 
 export default async function CalendarPage() {
   const supabase = await createClient()

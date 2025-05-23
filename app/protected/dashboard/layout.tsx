@@ -1,8 +1,9 @@
 "use client"
 
 import { ReactNode } from 'react'
-import { useIsMobile } from '@/hooks/use-mobile'
 import BottomTabNavigation from '@/components/dashboard/bottom-tab-navigation'
+import { useIsMobile } from '@/hooks/use-mobile'
+
 
 interface DashboardLayoutProps {
   children: ReactNode
