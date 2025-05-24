@@ -1,7 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
-import { createClient } from '@/lib/supabase/client'
+import { useSupabase } from '@/providers/supabase-provider'
 import { Button } from '@/components/ui/button'
 import {
   Card,
@@ -25,7 +25,7 @@ export function LoginForm({ className, ...props }: React.ComponentPropsWithoutRe
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
-    const supabase = createClient()
+    const { supabase } = useSupabase()
     setIsLoading(true)
     setError(null)
 

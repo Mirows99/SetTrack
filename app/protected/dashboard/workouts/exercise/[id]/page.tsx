@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect, use } from 'react'
-import { createClient } from '@/lib/supabase/client'
+import { useSupabase } from '@/providers/supabase-provider'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
@@ -80,6 +80,7 @@ export default function ExercisePage({ params }: { params: Promise<{ id: string 
   
   const resolvedParams = use(params)
   const exerciseId = resolvedParams.id
+  const { supabase } = useSupabase()
 
   const form = useForm<SetFormValues>({
     resolver: zodResolver(setFormSchema),
@@ -94,8 +95,6 @@ export default function ExercisePage({ params }: { params: Promise<{ id: string 
   useEffect(() => {
     async function fetchData() {
       try {
-        const supabase = createClient()
-        
         // Check authentication
         const { data: authData, error: authError } = await supabase.auth.getSession()
         if (authError || !authData.session) {
@@ -139,7 +138,7 @@ export default function ExercisePage({ params }: { params: Promise<{ id: string 
     }
 
     fetchData()
-  }, [exerciseId])
+  }, [exerciseId, supabase])
 
   const onSubmit = async (values: SetFormValues) => {
     if (!exercise) return
@@ -147,8 +146,6 @@ export default function ExercisePage({ params }: { params: Promise<{ id: string 
     setIsSaving(true)
     
     try {
-      const supabase = createClient()
-      
       const { error } = await supabase
         .from('sets')
         .insert({

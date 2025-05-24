@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import { SupabaseProvider } from "@/providers/supabase-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -27,9 +28,11 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased px-4`}
       >
-        <div className="max-w-screen-xl mx-auto w-full">
-          {children}
-        </div>
+        <SupabaseProvider>
+          <div className="max-w-screen-xl mx-auto w-full">
+            {children}
+          </div>
+        </SupabaseProvider>
       </body>
     </html>
   );

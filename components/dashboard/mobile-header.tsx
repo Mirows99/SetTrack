@@ -4,7 +4,7 @@ import { User } from '@supabase/supabase-js'
 import { LogOutIcon, SettingsIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { createClient } from '@/lib/supabase/client'
+import { useSupabase } from '@/providers/supabase-provider'
 import { useRouter } from 'next/navigation'
 
 interface MobileHeaderProps {
@@ -13,9 +13,9 @@ interface MobileHeaderProps {
 
 export default function MobileHeader({ user }: MobileHeaderProps) {
   const router = useRouter()
+  const { supabase } = useSupabase()
 
   const handleLogout = async () => {
-    const supabase = createClient()
     await supabase.auth.signOut()
     router.push('/auth/login')
   }
