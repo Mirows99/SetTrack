@@ -20,25 +20,29 @@ import { Textarea } from '@/components/ui/textarea'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
 import { toast } from 'sonner'
+import { useSupabase } from '@/providers/supabase-provider'
 
 const profileFormSchema = z.object({
   fullName: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
-  age: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+  age: z.coerce.number().min(0, {
     message: "Age must be a positive number.",
   }),
   gender: z.string().min(1, {
     message: "Please select a gender.",
   }),
-  height: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+  height: z.coerce.number().min(0, {
     message: "Height must be a positive number.",
   }),
-  weight: z.string().refine((val) => !isNaN(Number(val)) && Number(val) > 0, {
+  weight: z.coerce.number().min(0, {
     message: "Weight must be a positive number.",
   }),
   fitnessLevel: z.string().min(1, {
     message: "Please select a fitness level.",
+  }),
+  goal: z.string().min(1, {
+    message: "Please select a goal.",
   }),
   bio: z.string().max(500, {
     message: "Bio must not be longer than 500 characters.",
@@ -53,15 +57,17 @@ interface ProfileFormProps {
 
 export default function ProfileForm({ user }: ProfileFormProps) {
   const [isSaving, setIsSaving] = useState(false)
+  const { supabase } = useSupabase()
 
   // Default values for the form
   const defaultValues: Partial<ProfileFormValues> = {
     fullName: "",
-    age: "",
+    age: 0,
     gender: "",
-    height: "",
-    weight: "",
+    height: 0,
+    weight: 0,
     fitnessLevel: "",
+    goal: "",
     bio: "",
   }
 
@@ -73,14 +79,29 @@ export default function ProfileForm({ user }: ProfileFormProps) {
 
   async function onSubmit(data: ProfileFormValues) {
     setIsSaving(true)
-    
+
     try {
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000))
-      
-      // TODO: Save to Supabase
-      console.log('Saving profile data:', data)
-      
+
+      const { error } = await supabase
+        .from('user_profiles')
+        .insert({
+          user_id: user.id,
+          name: data.fullName,
+          age: data.age,
+          gender: data.gender,
+          height: data.height,
+          weight: data.weight,
+          fitness_level: data.fitnessLevel,
+          goal: data.goal,
+          bio: data.bio,
+        })
+
+      if (error) {
+        console.error('Error saving Profile:', error)
+        alert(`Failed to save Profile: ${error.message || 'Unknown error'}`)
+        return
+      }
+
       toast.success("Profile updated successfully")
     } catch (error) {
       toast.error("Failed to update profile")
@@ -112,7 +133,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
                 </FormItem>
               )}
             />
-            
+
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -127,7 +148,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="gender"
@@ -152,7 +173,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
                 )}
               />
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <FormField
                 control={form.control}
@@ -167,7 +188,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
                   </FormItem>
                 )}
               />
-              
+
               <FormField
                 control={form.control}
                 name="weight"
@@ -182,31 +203,57 @@ export default function ProfileForm({ user }: ProfileFormProps) {
                 )}
               />
             </div>
-            
-            <FormField
-              control={form.control}
-              name="fitnessLevel"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Fitness Level</FormLabel>
-                  <Select onValueChange={field.onChange} defaultValue={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select level" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      <SelectItem value="beginner">Beginner</SelectItem>
-                      <SelectItem value="intermediate">Intermediate</SelectItem>
-                      <SelectItem value="advanced">Advanced</SelectItem>
-                      <SelectItem value="professional">Professional</SelectItem>
-                    </SelectContent>
-                  </Select>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            
+
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="fitnessLevel"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Fitness Level</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select level" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="beginner">Beginner</SelectItem>
+                        <SelectItem value="intermediate">Intermediate</SelectItem>
+                        <SelectItem value="advanced">Advanced</SelectItem>
+                        <SelectItem value="professional">Professional</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <FormField
+                control={form.control}
+                name="goal"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Goal</FormLabel>
+                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select goal" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        <SelectItem value="lose-weight">Lose Weight</SelectItem>
+                        <SelectItem value="gain-muscle">Gain Muscle</SelectItem>
+                        <SelectItem value="improve-health">Improve Health</SelectItem>
+                        <SelectItem value="other">Other</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
             <FormField
               control={form.control}
               name="bio"
@@ -227,7 +274,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
                 </FormItem>
               )}
             />
-            
+
             <Button type="submit" disabled={isSaving}>
               {isSaving ? "Saving..." : "Save Changes"}
             </Button>

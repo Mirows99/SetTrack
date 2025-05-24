@@ -3,6 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import ConditionalHeader from '@/components/dashboard/conditional-header'
 import { ProfileForm } from '@/features/profile'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import ExercisePreferences from '@/components/dashboard/exercise-preferences'
 
 export default async function ProfilePage() {
   const supabase = await createClient()
@@ -26,7 +27,11 @@ export default async function ProfilePage() {
       </div>
       
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <ProfileForm user={data.user} />
+        <div className="space-y-6">
+          <ProfileForm user={data.user} />
+          
+          <ExercisePreferences />
+        </div>
         
         <div className="space-y-6">
           <Card>
