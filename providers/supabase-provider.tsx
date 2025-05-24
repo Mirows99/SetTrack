@@ -1,11 +1,13 @@
 'use client'
 
 import { createClient } from '@/lib/supabase/client'
-import { createContext, useContext, useState } from 'react'
-import type { SupabaseClient } from '@supabase/supabase-js'
+import { createContext, useContext, useState, useEffect } from 'react'
+import type { SupabaseClient, User } from '@supabase/supabase-js'
 
 type SupabaseContext = {
     supabase: SupabaseClient
+    user: User | null
+    loading: boolean
 }
 
 const Context = createContext<SupabaseContext | undefined>(undefined)
@@ -13,9 +15,29 @@ const Context = createContext<SupabaseContext | undefined>(undefined)
 export function SupabaseProvider({ children }: { children: React.ReactNode }) {
     // lazyInit to prevent new client on every render, fcking remember this you idiot
     const [supabase] = useState(() => createClient())
+    const [user, setUser] = useState<User | null>(null)
+    const [loading, setLoading] = useState(true)
+
+    useEffect(() => {
+        // Get initial user and listen for auth changes
+        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
+            setUser(session?.user ?? null)
+            setLoading(false)
+        })
+
+        // Trigger initial auth state check
+        supabase.auth.getSession().then(({ data: { session } }) => {
+            setUser(session?.user ?? null)
+            setLoading(false)
+        })
+
+        return () => subscription.unsubscribe()
+    }, [supabase.auth])
+
+    const value = { supabase, user, loading }
 
     return (
-        <Context.Provider value={{ supabase }}>
+        <Context.Provider value={value}>
             {children}
         </Context.Provider>
     )
