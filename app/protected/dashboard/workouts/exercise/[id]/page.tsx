@@ -80,7 +80,7 @@ export default function ExercisePage({ params }: { params: Promise<{ id: string 
   
   const resolvedParams = use(params)
   const exerciseId = resolvedParams.id
-  const { supabase } = useSupabase()
+  const { supabase, user } = useSupabase()
 
   const form = useForm<SetFormValues>({
     resolver: zodResolver(setFormSchema),
@@ -149,6 +149,7 @@ export default function ExercisePage({ params }: { params: Promise<{ id: string 
       const { error } = await supabase
         .from('sets')
         .insert({
+          user_id: user?.id,
           exercise: exerciseId,
           weight: parseFloat(values.weight),
           reps: parseInt(values.reps),

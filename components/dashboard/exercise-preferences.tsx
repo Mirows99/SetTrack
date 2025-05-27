@@ -5,6 +5,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { Button } from '@/components/ui/button'
 import { Star } from 'lucide-react'
 
+// TODO: Fetch exercises from the database
 const exercises = [
   'Push-ups', 'Pull-ups', 'Squats', 'Deadlifts', 'Bench Press',
   'Overhead Press', 'Barbell Rows', 'Dips', 'Lunges', 'Planks',
