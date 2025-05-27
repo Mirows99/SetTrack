@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, use } from "react";
-import { useSupabase } from "@/providers/supabase-provider";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -30,23 +29,27 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { cn } from "@/lib/utils";
+import { getExerciseById, getSets, createSet } from "@/lib/actions";
+import { useSupabase } from "@/providers/supabase-provider";
+import { ExerciseLoadingSkeleton } from "@/features/workouts";
+
 
 type Exercise = {
-  id: string;
+  id: bigint;
   name: string;
-  level: string;
+  level?: string | null;
   primary_bodypart: string;
-  secondary_bodypart?: string;
+  secondary_bodypart?: string | null;
 };
 
 type Set = {
-  id: string;
-  created_at: string;
-  exercise: string;
-  reps: number;
-  weight: number;
-  intensity: string;
-  notes?: string;
+  id: bigint;
+  created_at: Date;
+  exercise: bigint | null;
+  reps: number | null;
+  weight: number | null;
+  intensity: string | null;
+  notes?: string | null;
 };
 
 const setFormSchema = z.object({
@@ -78,10 +81,11 @@ export default function ExercisePage({
   const [sets, setSets] = useState<Set[]>([]);
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const resolvedParams = use(params);
   const exerciseId = resolvedParams.id;
-  const { supabase, user } = useSupabase();
+  const { user } = useSupabase();
 
   const form = useForm<SetFormValues>({
     resolver: zodResolver(setFormSchema),
@@ -96,82 +100,79 @@ export default function ExercisePage({
   useEffect(() => {
     async function fetchData() {
       try {
+        setIsLoading(true);
+        setError(null);
+
         // Check authentication
-        const { data: authData, error: authError } =
-          await supabase.auth.getSession();
-        if (authError || !authData.session) {
+        if (!user) {
           window.location.href = "/auth/login";
           return;
         }
 
         // Fetch exercise data
-        const { data: exerciseData, error: exerciseError } = await supabase
-          .from("excercise")
-          .select("*")
-          .eq("id", exerciseId)
-          .single();
-
-        if (exerciseError || !exerciseData) {
-          console.error("Error fetching exercise:", exerciseError);
+        const exerciseResult = await getExerciseById(BigInt(exerciseId));
+        if (!exerciseResult.success || !exerciseResult.data) {
+          console.error("Error fetching exercise:", exerciseResult.error);
           window.location.href = "/protected/dashboard/workouts/quick-start";
           return;
         }
 
-        setExercise(exerciseData);
+        setExercise(exerciseResult.data);
 
         // Fetch sets data for this exercise
-        const { data: setsData, error: setsError } = await supabase
-          .from("sets")
-          .select("*")
-          .eq("exercise", exerciseId)
-          .order("created_at", { ascending: false });
-
-        if (setsError) {
-          console.error("Error fetching sets:", setsError);
+        const setsResult = await getSets(user.id, BigInt(exerciseId));
+        if (!setsResult.success) {
+          console.error("Error fetching sets:", setsResult.error);
+          setError("Failed to load workout history");
         } else {
-          setSets(setsData || []);
+          setSets(setsResult.data || []);
         }
 
         setIsLoading(false);
       } catch (error) {
         console.error("Data fetching error:", error);
-        window.location.href = "/auth/login";
+        setError("Failed to load data");
+        setIsLoading(false);
       }
     }
 
     fetchData();
-  }, [exerciseId, supabase]);
+  }, [exerciseId]);
 
   const onSubmit = async (values: SetFormValues) => {
     if (!exercise) return;
 
     setIsSaving(true);
+    setError(null);
 
     try {
-      const { error } = await supabase.from("sets").insert({
-        user_id: user?.id,
-        exercise: exerciseId,
+      // Get current user
+      
+      if (!user) {
+        window.location.href = "/auth/login";
+        return;
+      }
+
+      // Create the set
+      const createResult = await createSet({
+        exercise: BigInt(exerciseId),
         weight: values.weight,
         reps: values.reps,
         intensity: values.intensity,
-        notes: values.notes || null,
+        notes: values.notes || undefined,
+        user_id: user.id,
       });
 
-      if (error) {
-        console.error("Error saving set:", error);
-        alert(`Failed to save set: ${error.message || "Unknown error"}`);
+      if (!createResult.success) {
+        console.error("Error saving set:", createResult.error);
+        setError(`Failed to save set: ${createResult.error}`);
         return;
       }
 
       // Refresh sets data
-      const { data: setsData, error: setsError } = await supabase
-        .from("sets")
-        .select("*")
-        .eq("exercise", exerciseId)
-        .order("created_at", { ascending: false });
-
-      if (!setsError && setsData) {
-        setSets(setsData);
+      const setsResult = await getSets(user.id, BigInt(exerciseId));
+      if (setsResult.success && setsResult.data) {
+        setSets(setsResult.data);
       }
 
       // Reset form and close drawer
@@ -179,14 +180,14 @@ export default function ExercisePage({
       setIsDrawerOpen(false);
     } catch (error) {
       console.error("Error saving set:", error);
-      alert("Failed to save set. Please try again.");
+      setError("Failed to save set. Please try again.");
     } finally {
       setIsSaving(false);
     }
   };
 
   if (isLoading) {
-    return <div className="container py-6">Loading...</div>;
+    return <ExerciseLoadingSkeleton />;
   }
 
   if (!exercise) {
@@ -196,6 +197,12 @@ export default function ExercisePage({
 
   return (
     <div className="container py-6 space-y-6 relative pb-24">
+      {error && (
+        <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded">
+          {error}
+        </div>
+      )}
+
       <div className="flex items-center gap-2">
         <Button variant="ghost" size="icon" asChild>
           <Link href="/protected/dashboard/workouts/quick-start">
@@ -214,14 +221,16 @@ export default function ExercisePage({
             {exercise.secondary_bodypart}
           </span>
         )}
-        <span className="px-2 py-1 bg-muted rounded-md text-sm">
-          {exercise.level}
-        </span>
+        {exercise.level && (
+          <span className="px-2 py-1 bg-muted rounded-md text-sm">
+            {exercise.level}
+          </span>
+        )}
       </div>
 
       <div>
         {/* Analytics Card */}
-        <AnalyticsCard exerciseId={exercise.id} />
+        <AnalyticsCard exerciseId={exercise.id.toString()} />
       </div>
 
       {/* Past Sets Table */}
@@ -261,7 +270,7 @@ export default function ExercisePage({
 
                   return (
                     <button
-                      key={set.id}
+                      key={set.id.toString()}
                       className="w-full px-6 py-4 flex items-center justify-between hover:bg-muted/50 transition-colors"
                       onClick={() => {
                         /* TODO: Add click handler */

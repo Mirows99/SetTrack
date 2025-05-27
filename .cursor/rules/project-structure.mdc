@@ -5,7 +5,7 @@ alwaysApply: true
 ---
 # Project Structure Guide
 
-This is a Next.js 15 project using the App Router, React 19, TypeScript, and Tailwind CSS. This project uses bun as package manager!
+This is a Next.js 15 project using the App Router, React 19, TypeScript, and Tailwind CSS. This project uses bun as package manager! MKAE SURE TO NOT USE NPM!!
 
 ## Key Files and Directories
 

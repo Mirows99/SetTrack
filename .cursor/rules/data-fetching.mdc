@@ -5,78 +5,225 @@ alwaysApply: true
 ---
 # Data Fetching Guide
 
-This project uses Supabase for data storage and authentication.
+This project uses Prisma with PostgreSQL for data storage and comprehensive server actions for secure database operations.
+
+## Server Actions
+
+All database operations are handled through server actions located in `@/lib/actions`. These actions provide a secure way to interact with the database without exposing credentials to the client.
+
+### Available Actions
+
+- **Exercise Actions**: `createExercise`, `getExercises`, `getExerciseById`, `updateExercise`, `deleteExercise`, `searchExercises`
+- **Set Actions**: `createSet`, `getSets`, `updateSet`, `deleteSet`
+- **User Preference Actions**: `createUserPreference`, `getUserPreferences`, `updateUserPreference`, `deleteUserPreference`
+- **Workout Template Actions**: `createWorkoutTemplate`, `getWorkoutTemplates`, `getWorkoutTemplateById`, `updateWorkoutTemplate`, `deleteWorkoutTemplate`
+- **User Profile Actions**: `getUserProfile`, `createOrUpdateUserProfile`
+- **Statistics Actions**: `getWorkoutStats`
 
 ## Server Components
 
-In server components, fetch data directly:
+In server components, call server actions directly:
 
 ```tsx
 // In a Server Component
-import { createServerClient } from "@/lib/supabase/server";
+import { getExercises } from '@/lib/actions'
 
-export default async function UsersPage() {
-  const supabase = createServerClient();
-  const { data: users } = await supabase.from("users").select("*");
+export default async function ExercisesPage() {
+  const result = await getExercises(10)
+  
+  if (!result.success) {
+    return <div>Error: {result.error}</div>
+  }
+  
+  const exercises = result.data
   
   return (
     <div>
-      <h1>Users</h1>
+      <h1>Exercises</h1>
       <ul>
-        {users?.map(user => (
-          <li key={user.id}>{user.name}</li>
+        {exercises?.map(exercise => (
+          <li key={exercise.id.toString()}>{exercise.name}</li>
         ))}
       </ul>
     </div>
-  );
+  )
 }
 ```
 
 ## Client Components
 
-For client components, use hooks:
+For client components, use server actions with proper error handling and loading states:
 
 ```tsx
-"use client";
+'use client'
 
-import { useEffect, useState } from "react";
-import { createBrowserClient } from "@/lib/supabase/client";
+import { useState, useEffect } from 'react'
+import { getExercises, createSet } from '@/lib/actions'
 
-export function UserList() {
-  const [users, setUsers] = useState([]);
-  const supabase = createBrowserClient();
-  
+export function WorkoutLogger() {
+  const [exercises, setExercises] = useState([])
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+
   useEffect(() => {
-    async function fetchUsers() {
-      const { data } = await supabase.from("users").select("*");
-      if (data) setUsers(data);
+    loadExercises()
+  }, [])
+
+  const loadExercises = async () => {
+    setLoading(true)
+    setError(null)
+    try {
+      const result = await getExercises(10)
+      if (result.success) {
+        setExercises(result.data)
+      } else {
+        setError(result.error)
+      }
+    } catch (error) {
+      setError('Failed to load exercises')
+      console.error('Error loading exercises:', error)
+    } finally {
+      setLoading(false)
     }
-    
-    fetchUsers();
-  }, []);
-  
+  }
+
+  const logSet = async (exerciseId: bigint, reps: number, weight: number) => {
+    try {
+      const result = await createSet({
+        exercise: exerciseId,
+        reps,
+        weight,
+        user_id: 'your-user-id' // Get from auth context
+      })
+
+      if (result.success) {
+        console.log('Set logged successfully!')
+      } else {
+        setError(result.error)
+      }
+    } catch (error) {
+      setError('Failed to log set')
+      console.error('Error logging set:', error)
+    }
+  }
+
+  if (loading) return <div>Loading...</div>
+  if (error) return <div>Error: {error}</div>
+
   return (
     <ul>
-      {users.map(user => (
-        <li key={user.id}>{user.name}</li>
+      {exercises.map(exercise => (
+        <li key={exercise.id.toString()}>{exercise.name}</li>
       ))}
     </ul>
-  );
+  )
 }
 ```
 
-## Authentication
+## Error Handling
 
-Use Supabase authentication in protected routes:
+All server actions return a consistent response format:
 
-```tsx
-// Middleware checks for authentication
-import { createServerClient } from "@/lib/supabase/server";
-
-export async function userIsAuthenticated() {
-  const supabase = createServerClient();
-  const { data: { session } } = await supabase.auth.getSession();
-  return !!session;
+```typescript
+{
+  success: boolean
+  data?: any        // Present if success is true
+  error?: string    // Present if success is false
 }
 ```
+
+Always check the `success` property before using the data:
+
+```typescript
+const result = await createExercise({ name: 'Push-ups', primary_bodypart: 'Chest' })
+
+if (result.success) {
+  console.log('Created exercise:', result.data)
+} else {
+  console.error('Error:', result.error)
+}
+```
+
+## Working with BigInt IDs
+
+Prisma uses BigInt for auto-incrementing IDs. Handle them properly:
+
+```typescript
+// Converting BigInt to string for display
+const exerciseId = exercise.id.toString()
+
+// Converting string back to BigInt for database operations
+const result = await getExerciseById(BigInt(exerciseId))
+
+// In forms, use string values and convert when needed
+const [selectedExercise, setSelectedExercise] = useState<bigint | null>(null)
+
+// In select onChange
+onChange={(e) => setSelectedExercise(e.target.value ? BigInt(e.target.value) : null)}
+```
+
+## Data Validation
+
+Server actions include Zod validation schemas. Expected data formats:
+
+### Exercise Data
+```typescript
+{
+  name: string                    // Required
+  primary_bodypart: string        // Required
+  secondary_bodypart?: string     // Optional
+  category?: string               // Optional
+  level?: string                  // Optional
+  created_by?: string             // Optional UUID
+}
+```
+
+### Set Data
+```typescript
+{
+  exercise: bigint               // Required - Exercise ID
+  reps?: number                  // Optional - Positive integer
+  weight?: number                // Optional - Positive number
+  intensity?: string             // Optional
+  notes?: string                 // Optional
+  user_id?: string               // Optional UUID
+}
+```
+
+## Authentication Integration
+
+Integrate with your authentication system by getting the user ID from auth context:
+
+```typescript
+import { getUser } from '@/lib/auth' // Your auth utility
+
+const logSet = async (exerciseId: bigint, reps: number, weight: number) => {
+  const user = await getUser()
+  
+  const result = await createSet({
+    exercise: exerciseId,
+    reps,
+    weight,
+    user_id: user.id
+  })
+  
+  // Handle result...
+}
+```
+
+## Cache Revalidation
+
+Server actions automatically revalidate relevant paths:
+- Exercise actions revalidate `/exercises`
+- Set actions revalidate `/workouts`
+- Preference actions revalidate `/preferences`
+- Template actions revalidate `/templates`
+- Profile actions revalidate `/profile`
+
+## Performance Considerations
+
+- Use pagination with `limit` parameters
+- Filter data at the database level using provided filter parameters
+- Actions include optimized queries with proper `include` statements
+- Add database indexes for frequently queried fields
 
