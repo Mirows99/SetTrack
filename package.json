@@ -4,9 +4,12 @@
   "private": true,
   "scripts": {
     "dev": "next dev --turbopack",
-    "build": "next build",
+    "build": "bun run env:refresh && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "env:load": "op inject -i .env.template -o .env",
+    "env:refresh": "rm -f .env && op inject -i .env.template -o .env",
+    "dev:refresh": "bun run env:refresh && next dev --turbopack"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
