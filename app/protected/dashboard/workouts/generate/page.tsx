@@ -60,17 +60,15 @@ const bodyPartOptions = [
   { id: 'lower-body', label: 'Lower Body', description: 'Legs, glutes, and calves' },
   { id: 'push', label: 'Push (Chest, Shoulders, Triceps)', description: 'Pushing movements and muscles' },
   { id: 'pull', label: 'Pull (Back, Biceps)', description: 'Pulling movements and muscles' },
-  { id: 'legs', label: 'Legs & Glutes', description: 'Lower body focus' },
   { id: 'core', label: 'Core & Abs', description: 'Abdominal and core muscles' },
-  { id: 'cardio', label: 'Cardio', description: 'Heart rate and endurance training' }
 ]
 
 const durationOptions = [
-  { value: '15', label: '15 minutes', description: 'Quick session' },
-  { value: '30', label: '30 minutes', description: 'Standard workout' },
-  { value: '45', label: '45 minutes', description: 'Extended session' },
-  { value: '60', label: '60 minutes', description: 'Full workout' },
-  { value: '90', label: '90+ minutes', description: 'Extended training' }
+  { value: '30', label: '30 minutes', description: 'Quick session' },
+  { value: '45', label: '45 minutes', description: 'Standard workout' },
+  { value: '60', label: '60 minutes', description: 'Extended session' },
+  { value: '90', label: '90 minutes', description: 'Full workout' },
+  { value: '120', label: '120 minutes', description: 'Extended training' }
 ]
 
 const locationOptions = [
@@ -80,6 +78,7 @@ const locationOptions = [
     description: 'Bodyweight exercises only',
     icon: '🏠'
   },
+  // Add option to add equipment to profile
   { 
     value: 'home-basic-equipment', 
     label: 'Home (Basic Equipment)', 
@@ -100,11 +99,12 @@ const locationOptions = [
   }
 ]
 
-const intensityOptions = [
-  { value: 'beginner', label: 'Beginner', description: 'New to fitness or getting back into it' },
-  { value: 'intermediate', label: 'Intermediate', description: 'Regular exercise routine' },
-  { value: 'advanced', label: 'Advanced', description: 'Experienced with challenging workouts' }
-]
+// This should be in the profile already
+// const intensityOptions = [
+//   { value: 'beginner', label: 'Beginner', description: 'New to fitness or getting back into it' },
+//   { value: 'intermediate', label: 'Intermediate', description: 'Regular exercise routine' },
+//   { value: 'advanced', label: 'Advanced', description: 'Experienced with challenging workouts' }
+// ]
 
 export default function GenerateWorkoutFormPage() {
   const router = useRouter()
@@ -115,79 +115,6 @@ export default function GenerateWorkoutFormPage() {
     intensity: ''
   })
 
-  // Background data state
-  const [sets, setSets] = useState<SetWithExercise[]>([])
-  const [exercises, setExercises] = useState<Exercise[]>([])
-  const [exercisePreferences, setExercisePreferences] = useState<ExercisePreference[]>([])
-  const [isLoadingData, setIsLoadingData] = useState(true)
-
-  // Fetch data in background
-  // useEffect(() => {
-  //   async function fetchWorkoutData() {
-  //     try {
-  //       const supabase = createClient()
-        
-  //       // Fetch sets with exercise data
-  //       const { data: setsData, error: setsError } = await supabase
-  //         .from('sets')
-  //         .select(`
-  //           id,
-  //           created_at,
-  //           exercise,
-  //           reps,
-  //           weight,
-  //           intensity,
-  //           notes,
-  //           exercise_data:exercises(
-  //             id,
-  //             created_by,
-  //             name,
-  //             primary_bodypart,
-  //             secondary_bodypart,
-  //             category,
-  //             level
-  //           )
-  //         `)
-  //         .order('created_at', { ascending: false })
-
-  //       if (setsError) {
-  //         console.error('Error fetching sets:', setsError)
-  //       } else if (setsData) {
-  //         setSets(setsData as SetWithExercise[])
-  //       }
-
-  //       // Fetch all exercises
-  //       const { data: exercisesData, error: exercisesError } = await supabase
-  //         .from('exercises')
-  //         .select('*')
-  //         .order('name', { ascending: true })
-
-  //       if (exercisesError) {
-  //         console.error('Error fetching exercises:', exercisesError)
-  //       } else if (exercisesData) {
-  //         setExercises(exercisesData as Exercise[])
-          
-  //         // Generate mock exercise preferences based on exercises
-  //         const mockPreferences: ExercisePreference[] = exercisesData.map((exercise, index) => ({
-  //           exercise_id: exercise.id,
-  //           exercise_name: exercise.name,
-  //           preference_score: Math.floor(Math.random() * 10) + 1, // Random score 1-10
-  //           last_performed: index % 3 === 0 ? new Date(Date.now() - Math.random() * 30 * 24 * 60 * 60 * 1000).toISOString() : null, // Random date in last 30 days for every 3rd exercise
-  //           frequency: Math.floor(Math.random() * 15) // Random frequency 0-14 times in last 30 days
-  //         }))
-          
-  //         setExercisePreferences(mockPreferences)
-  //       }
-        
-  //     } catch (error) {
-  //       console.error('Error fetching workout data:', error)
-  //     } finally {
-  //       setIsLoadingData(false)
-  //     }
-  //   }
-
-  //   fetchWorkoutData()
-  // }, [])
 
   const handleBodyPartChange = (bodyPartId: string, checked: boolean) => {
     if (checked) {
@@ -211,18 +138,6 @@ export default function GenerateWorkoutFormPage() {
       alert('Please fill in all fields')
       return
     }
-
-    // Store preferences and background data in localStorage for the result page to use
-    const workoutData = {
-      preferences,
-      sets,
-      exercises,
-      exercisePreferences,
-      generatedAt: new Date().toISOString()
-    }
-    
-    localStorage.setItem('workoutPreferences', JSON.stringify(preferences))
-    localStorage.setItem('workoutData', JSON.stringify(workoutData))
     
     // Navigate to result page
     router.push('/protected/dashboard/workouts/generate/result')
@@ -344,38 +259,6 @@ export default function GenerateWorkoutFormPage() {
                     <div className="flex-1">
                       <Label htmlFor={`location-${option.value}`} className="font-medium cursor-pointer flex items-center gap-2">
                         <span>{option.icon}</span>
-                        {option.label}
-                      </Label>
-                      <p className="text-sm text-muted-foreground">
-                        {option.description}
-                      </p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </RadioGroup>
-          </CardContent>
-        </Card>
-
-        {/* Intensity Selection */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center gap-2">
-              <Zap className="h-5 w-5" />
-              What's your fitness level?
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <RadioGroup 
-              value={preferences.intensity} 
-              onValueChange={(value) => setPreferences(prev => ({ ...prev, intensity: value }))}
-            >
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {intensityOptions.map((option) => (
-                  <div key={option.value} className="flex items-center space-x-3 p-3 border rounded-lg hover:bg-muted/50 transition-colors">
-                    <RadioGroupItem value={option.value} id={`intensity-${option.value}`} />
-                    <div className="flex-1">
-                      <Label htmlFor={`intensity-${option.value}`} className="font-medium cursor-pointer">
                         {option.label}
                       </Label>
                       <p className="text-sm text-muted-foreground">
