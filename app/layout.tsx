@@ -1,7 +1,14 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
+import localFont from 'next/font/local'
 import './globals.css'
 import { SupabaseProvider } from '@/providers/supabase-provider'
+
+const Watermelon = localFont({
+  src: './fonts/WaterLemon.ttf',
+  display: 'swap',
+  variable: '--font-waterlemon',
+})
 
 const geistSans = Geist({
   variable: '--font-geist-sans',
@@ -26,7 +33,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased px-4`}
+        className={`${geistSans.variable} ${geistMono.variable} ${Watermelon.variable} antialiased px-4`}
       >
         <SupabaseProvider>
           <div className="max-w-screen-xl mx-auto w-full">{children}</div>

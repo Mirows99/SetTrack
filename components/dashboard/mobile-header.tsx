@@ -23,7 +23,7 @@ export default function MobileHeader() {
             <LogOutIcon className="h-5 w-5" />
             <span className="sr-only">Logout</span>
           </Button>
-          <p className="text-sm text-muted-foreground">
+          <p className="text-sm font-waterlemon text-muted-foreground">
             {/* Welcome back, {user.name?} */}
             Welcome back, Elias
           </p>
