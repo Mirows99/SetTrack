@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { useState } from 'react'
 import { PlusIcon } from 'lucide-react'
@@ -15,15 +15,19 @@ import {
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Textarea } from '@/components/ui/textarea'
-import { 
-  Select, 
-  SelectContent, 
-  SelectItem, 
-  SelectTrigger, 
-  SelectValue 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
 } from '@/components/ui/select'
 import { Calendar } from '@/components/ui/calendar'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from '@/components/ui/popover'
 import { CalendarIcon } from 'lucide-react'
 import { format } from 'date-fns'
 
@@ -34,7 +38,7 @@ export default function CreateWorkoutButton() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     // TODO: Save workout data to database
-    
+
     // Reset and close dialog
     setOpen(false)
   }
@@ -67,7 +71,7 @@ export default function CreateWorkoutButton() {
                 required
               />
             </div>
-            
+
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="workout-type" className="text-right">
                 Type
@@ -86,11 +90,9 @@ export default function CreateWorkoutButton() {
                 </Select>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-4 items-center gap-4">
-              <Label className="text-right">
-                Date
-              </Label>
+              <Label className="text-right">Date</Label>
               <div className="col-span-3">
                 <Popover>
                   <PopoverTrigger asChild>
@@ -117,7 +119,7 @@ export default function CreateWorkoutButton() {
                 </Popover>
               </div>
             </div>
-            
+
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="duration" className="text-right">
                 Duration (min)
@@ -130,7 +132,7 @@ export default function CreateWorkoutButton() {
                 required
               />
             </div>
-            
+
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="calories" className="text-right">
                 Calories
@@ -142,7 +144,7 @@ export default function CreateWorkoutButton() {
                 className="col-span-3"
               />
             </div>
-            
+
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="exercises" className="text-right">
                 Exercises
@@ -154,7 +156,7 @@ export default function CreateWorkoutButton() {
                 required
               />
             </div>
-            
+
             <div className="grid grid-cols-4 items-center gap-4">
               <Label htmlFor="notes" className="text-right">
                 Notes
@@ -173,4 +175,4 @@ export default function CreateWorkoutButton() {
       </DialogContent>
     </Dialog>
   )
-} 
+}

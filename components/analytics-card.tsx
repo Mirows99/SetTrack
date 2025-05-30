@@ -1,8 +1,8 @@
-"use client";
+'use client'
 
-import { useState } from "react";
-import Link from "next/link";
-import { BarChart3, ChevronDown, ChevronUp } from "lucide-react";
+import { useState } from 'react'
+import Link from 'next/link'
+import { BarChart3, ChevronDown, ChevronUp } from 'lucide-react'
 import {
   Card,
   CardContent,
@@ -10,15 +10,15 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+} from '@/components/ui/card'
+import { Button } from '@/components/ui/button'
 
 interface AnalyticsCardProps {
-  exerciseId: string;
+  exerciseId: string
 }
 
 export function AnalyticsCard({ exerciseId }: AnalyticsCardProps) {
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false)
 
   return (
     <Card className="cursor-pointer hover:border-primary/50 transition-colors">
@@ -39,8 +39,8 @@ export function AnalyticsCard({ exerciseId }: AnalyticsCardProps) {
           variant="ghost"
           size="icon"
           onClick={(e) => {
-            e.stopPropagation();
-            setIsExpanded(!isExpanded);
+            e.stopPropagation()
+            setIsExpanded(!isExpanded)
           }}
         >
           {isExpanded ? (
@@ -72,5 +72,5 @@ export function AnalyticsCard({ exerciseId }: AnalyticsCardProps) {
         </>
       )}
     </Card>
-  );
+  )
 }

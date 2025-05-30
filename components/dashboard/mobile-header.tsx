@@ -1,17 +1,12 @@
-"use client"
+'use client'
 
-import { User } from '@supabase/supabase-js'
 import { LogOutIcon, SettingsIcon } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { useSupabase } from '@/providers/supabase-provider'
 import { useRouter } from 'next/navigation'
 
-interface MobileHeaderProps {
-  user: User
-}
-
-export default function MobileHeader({ user }: MobileHeaderProps) {
+export default function MobileHeader() {
   const router = useRouter()
   const { supabase } = useSupabase()
 
@@ -32,7 +27,11 @@ export default function MobileHeader({ user }: MobileHeaderProps) {
             {/* Welcome back, {user.name?} */}
             Welcome back, Elias
           </p>
-          <Button variant="ghost" size="icon" onClick={() => router.push('/protected/settings')}>
+          <Button
+            variant="ghost"
+            size="icon"
+            onClick={() => router.push('/protected/settings')}
+          >
             <SettingsIcon className="h-5 w-5" />
             <span className="sr-only">Settings</span>
           </Button>
@@ -40,4 +39,4 @@ export default function MobileHeader({ user }: MobileHeaderProps) {
       </CardContent>
     </Card>
   )
-} 
+}

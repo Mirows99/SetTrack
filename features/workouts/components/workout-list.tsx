@@ -1,14 +1,14 @@
-"use client"
+'use client'
 
 import { useState } from 'react'
-import { 
-  CalendarIcon, 
+import {
+  CalendarIcon,
   ChevronDownIcon,
-  ClockIcon, 
-  FlameIcon, 
-  MoreHorizontalIcon, 
-  PencilIcon, 
-  TrashIcon
+  ClockIcon,
+  FlameIcon,
+  MoreHorizontalIcon,
+  PencilIcon,
+  TrashIcon,
 } from 'lucide-react'
 import { format } from 'date-fns'
 import { Button } from '@/components/ui/button'
@@ -31,7 +31,7 @@ const workoutData = [
     calories: 320,
     exercises: ['Bench Press', 'Pull-ups', 'Shoulder Press'],
     type: 'strength',
-    notes: 'Increased weight on bench press by 5kg'
+    notes: 'Increased weight on bench press by 5kg',
   },
   {
     id: '2',
@@ -41,7 +41,7 @@ const workoutData = [
     calories: 400,
     exercises: ['Squats', 'Deadlifts', 'Leg Press'],
     type: 'strength',
-    notes: 'Focus on proper form for deadlifts'
+    notes: 'Focus on proper form for deadlifts',
   },
   {
     id: '3',
@@ -51,7 +51,7 @@ const workoutData = [
     calories: 280,
     exercises: ['Treadmill', 'Cycling', 'Rowing'],
     type: 'cardio',
-    notes: 'Increased pace during intervals'
+    notes: 'Increased pace during intervals',
   },
   {
     id: '4',
@@ -61,7 +61,7 @@ const workoutData = [
     calories: 450,
     exercises: ['Squats', 'Push-ups', 'Rows', 'Lunges'],
     type: 'strength',
-    notes: 'Felt stronger overall'
+    notes: 'Felt stronger overall',
   },
   {
     id: '5',
@@ -71,7 +71,7 @@ const workoutData = [
     calories: 300,
     exercises: ['Burpees', 'Mountain Climbers', 'Jumping Jacks'],
     type: 'cardio',
-    notes: 'Intense session, improved recovery time'
+    notes: 'Intense session, improved recovery time',
   },
   {
     id: '6',
@@ -79,10 +79,10 @@ const workoutData = [
     date: new Date(2023, 7, 3),
     duration: 40,
     calories: 150,
-    exercises: ['Downward Dog', 'Warrior Pose', 'Child\'s Pose'],
+    exercises: ['Downward Dog', 'Warrior Pose', "Child's Pose"],
     type: 'flexibility',
-    notes: 'Focused on hip mobility'
-  }
+    notes: 'Focused on hip mobility',
+  },
 ]
 
 export default function WorkoutList() {
@@ -106,14 +106,19 @@ export default function WorkoutList() {
             <div className="space-y-1">
               <div className="flex items-center gap-2">
                 <h3 className="font-semibold text-lg">{workout.name}</h3>
-                <Badge variant={
-                  workout.type === 'strength' ? 'default' : 
-                  workout.type === 'cardio' ? 'secondary' : 'outline'
-                }>
+                <Badge
+                  variant={
+                    workout.type === 'strength'
+                      ? 'default'
+                      : workout.type === 'cardio'
+                        ? 'secondary'
+                        : 'outline'
+                  }
+                >
                   {workout.type}
                 </Badge>
               </div>
-              
+
               <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-sm text-muted-foreground">
                 <div className="flex items-center">
                   <CalendarIcon className="mr-1 h-3 w-3" />
@@ -128,27 +133,31 @@ export default function WorkoutList() {
                   {workout.calories} cal
                 </div>
               </div>
-              
+
               <div className="pt-2">
                 <p className="text-sm font-medium">Exercises:</p>
                 <div className="flex flex-wrap gap-1 mt-1">
                   {workout.exercises.map((exercise) => (
-                    <Badge key={exercise} variant="outline">{exercise}</Badge>
+                    <Badge key={exercise} variant="outline">
+                      {exercise}
+                    </Badge>
                   ))}
                 </div>
               </div>
-              
+
               {workout.notes && (
                 <div className="pt-2">
                   <p className="text-sm font-medium">Notes:</p>
-                  <p className="text-sm text-muted-foreground">{workout.notes}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {workout.notes}
+                  </p>
                 </div>
               )}
             </div>
-            
+
             <div className="flex items-center">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 size="sm"
                 onClick={() => handleEdit(workout.id)}
                 className="mr-2"
@@ -156,7 +165,7 @@ export default function WorkoutList() {
                 <PencilIcon className="h-4 w-4" />
                 <span className="ml-1 hidden md:inline">Edit</span>
               </Button>
-              
+
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="sm">
@@ -168,7 +177,7 @@ export default function WorkoutList() {
                     <PencilIcon className="mr-2 h-4 w-4" />
                     Edit
                   </DropdownMenuItem>
-                  <DropdownMenuItem 
+                  <DropdownMenuItem
                     onClick={() => handleDelete(workout.id)}
                     className="text-red-600"
                   >
@@ -181,7 +190,7 @@ export default function WorkoutList() {
           </div>
         </Card>
       ))}
-      
+
       {workouts.length === 0 && (
         <div className="flex flex-col items-center justify-center py-12 text-center">
           <p className="text-muted-foreground">No workouts found</p>
@@ -192,4 +201,4 @@ export default function WorkoutList() {
       )}
     </div>
   )
-} 
+}

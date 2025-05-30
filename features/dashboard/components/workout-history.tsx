@@ -1,16 +1,23 @@
-"use client"
+'use client'
 
 import { useState } from 'react'
-import { 
-  ArrowRightIcon, 
-  CalendarIcon, 
-  DumbbellIcon, 
-  FlameIcon, 
-  TimerIcon 
+import {
+  ArrowRightIcon,
+  CalendarIcon,
+  DumbbellIcon,
+  FlameIcon,
+  TimerIcon,
 } from 'lucide-react'
 import { format } from 'date-fns'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import Link from 'next/link'
 
@@ -23,7 +30,7 @@ const mockWorkouts = [
     duration: 45,
     calories: 320,
     exercises: ['Bench Press', 'Pull-ups', 'Shoulder Press'],
-    type: 'strength'
+    type: 'strength',
   },
   {
     id: '2',
@@ -32,7 +39,7 @@ const mockWorkouts = [
     duration: 50,
     calories: 400,
     exercises: ['Squats', 'Deadlifts', 'Leg Press'],
-    type: 'strength'
+    type: 'strength',
   },
   {
     id: '3',
@@ -41,7 +48,7 @@ const mockWorkouts = [
     duration: 30,
     calories: 280,
     exercises: ['Treadmill', 'Cycling', 'Rowing'],
-    type: 'cardio'
+    type: 'cardio',
   },
   {
     id: '4',
@@ -50,8 +57,8 @@ const mockWorkouts = [
     duration: 60,
     calories: 450,
     exercises: ['Squats', 'Push-ups', 'Rows', 'Lunges'],
-    type: 'strength'
-  }
+    type: 'strength',
+  },
 ]
 
 export default function WorkoutHistory() {
@@ -74,15 +81,19 @@ export default function WorkoutHistory() {
       <CardContent>
         <div className="space-y-4">
           {workouts.map((workout) => (
-            <div 
-              key={workout.id} 
+            <div
+              key={workout.id}
               className="flex items-start justify-between border-b pb-4 last:border-0"
             >
               <div className="flex-1">
                 <div className="flex items-center gap-2">
                   <DumbbellIcon className="h-4 w-4 text-primary" />
                   <h3 className="font-medium">{workout.name}</h3>
-                  <Badge variant={workout.type === 'strength' ? 'default' : 'secondary'}>
+                  <Badge
+                    variant={
+                      workout.type === 'strength' ? 'default' : 'secondary'
+                    }
+                  >
                     {workout.type}
                   </Badge>
                 </div>
@@ -92,7 +103,9 @@ export default function WorkoutHistory() {
                 </div>
                 <div className="mt-2 flex flex-wrap gap-1">
                   {workout.exercises.map((exercise) => (
-                    <Badge key={exercise} variant="outline">{exercise}</Badge>
+                    <Badge key={exercise} variant="outline">
+                      {exercise}
+                    </Badge>
                   ))}
                 </div>
               </div>
@@ -114,10 +127,8 @@ export default function WorkoutHistory() {
         </div>
       </CardContent>
       <CardFooter>
-        <Button className="w-full">
-          Log New Workout
-        </Button>
+        <Button className="w-full">Log New Workout</Button>
       </CardFooter>
     </Card>
   )
-} 
+}

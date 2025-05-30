@@ -36,14 +36,16 @@ const CreateWorkoutTemplateSchema = z.object({
 })
 
 // Exercise Actions
-export async function createExercise(data: z.infer<typeof CreateExerciseSchema>) {
+export async function createExercise(
+  data: z.infer<typeof CreateExerciseSchema>
+) {
   try {
     const validatedData = CreateExerciseSchema.parse(data)
-    
+
     const exercise = await prisma.excercise.create({
       data: validatedData,
     })
-    
+
     revalidatePath('/exercises')
     return { success: true, data: exercise }
   } catch (error) {
@@ -62,7 +64,7 @@ export async function getExercises(limit?: number) {
         excercise_preset: true,
       },
     })
-    
+
     return { success: true, data: exercises }
   } catch (error) {
     console.error('Error fetching exercises:', error)
@@ -80,7 +82,7 @@ export async function getExerciseById(id: bigint) {
         excercise_preset: true,
       },
     })
-    
+
     return { success: true, data: exercise }
   } catch (error) {
     console.error('Error fetching exercise:', error)
@@ -88,13 +90,16 @@ export async function getExerciseById(id: bigint) {
   }
 }
 
-export async function updateExercise(id: bigint, data: Partial<z.infer<typeof CreateExerciseSchema>>) {
+export async function updateExercise(
+  id: bigint,
+  data: Partial<z.infer<typeof CreateExerciseSchema>>
+) {
   try {
     const exercise = await prisma.excercise.update({
       where: { id },
       data,
     })
-    
+
     revalidatePath('/exercises')
     return { success: true, data: exercise }
   } catch (error) {
@@ -108,7 +113,7 @@ export async function deleteExercise(id: bigint) {
     await prisma.excercise.delete({
       where: { id },
     })
-    
+
     revalidatePath('/exercises')
     return { success: true }
   } catch (error) {
@@ -121,14 +126,14 @@ export async function deleteExercise(id: bigint) {
 export async function createSet(data: z.infer<typeof CreateSetSchema>) {
   try {
     const validatedData = CreateSetSchema.parse(data)
-    
+
     const set = await prisma.sets.create({
       data: validatedData,
       include: {
         excercise: true,
       },
     })
-    
+
     revalidatePath('/workouts')
     return { success: true, data: set }
   } catch (error) {
@@ -151,7 +156,7 @@ export async function getSets(userId?: string, exerciseId?: bigint) {
         created_at: 'desc',
       },
     })
-    
+
     return { success: true, data: sets }
   } catch (error) {
     console.error('Error fetching sets:', error)
@@ -159,7 +164,10 @@ export async function getSets(userId?: string, exerciseId?: bigint) {
   }
 }
 
-export async function updateSet(id: bigint, data: Partial<z.infer<typeof CreateSetSchema>>) {
+export async function updateSet(
+  id: bigint,
+  data: Partial<z.infer<typeof CreateSetSchema>>
+) {
   try {
     const set = await prisma.sets.update({
       where: { id },
@@ -168,7 +176,7 @@ export async function updateSet(id: bigint, data: Partial<z.infer<typeof CreateS
         excercise: true,
       },
     })
-    
+
     revalidatePath('/workouts')
     return { success: true, data: set }
   } catch (error) {
@@ -182,7 +190,7 @@ export async function deleteSet(id: bigint) {
     await prisma.sets.delete({
       where: { id },
     })
-    
+
     revalidatePath('/workouts')
     return { success: true }
   } catch (error) {
@@ -192,17 +200,19 @@ export async function deleteSet(id: bigint) {
 }
 
 // User Preferences Actions
-export async function createUserPreference(data: z.infer<typeof CreateUserPreferenceSchema>) {
+export async function createUserPreference(
+  data: z.infer<typeof CreateUserPreferenceSchema>
+) {
   try {
     const validatedData = CreateUserPreferenceSchema.parse(data)
-    
+
     const preference = await prisma.user_preferences.create({
       data: validatedData,
       include: {
         excercise: true,
       },
     })
-    
+
     revalidatePath('/preferences')
     return { success: true, data: preference }
   } catch (error) {
@@ -219,7 +229,7 @@ export async function getUserPreferences(userId: string) {
         excercise: true,
       },
     })
-    
+
     return { success: true, data: preferences }
   } catch (error) {
     console.error('Error fetching user preferences:', error)
@@ -227,7 +237,10 @@ export async function getUserPreferences(userId: string) {
   }
 }
 
-export async function updateUserPreference(id: bigint, data: Partial<z.infer<typeof CreateUserPreferenceSchema>>) {
+export async function updateUserPreference(
+  id: bigint,
+  data: Partial<z.infer<typeof CreateUserPreferenceSchema>>
+) {
   try {
     const preference = await prisma.user_preferences.update({
       where: { id },
@@ -236,7 +249,7 @@ export async function updateUserPreference(id: bigint, data: Partial<z.infer<typ
         excercise: true,
       },
     })
-    
+
     revalidatePath('/preferences')
     return { success: true, data: preference }
   } catch (error) {
@@ -250,7 +263,7 @@ export async function deleteUserPreference(id: bigint) {
     await prisma.user_preferences.delete({
       where: { id },
     })
-    
+
     revalidatePath('/preferences')
     return { success: true }
   } catch (error) {
@@ -260,14 +273,16 @@ export async function deleteUserPreference(id: bigint) {
 }
 
 // Workout Templates Actions
-export async function createWorkoutTemplate(data: z.infer<typeof CreateWorkoutTemplateSchema>) {
+export async function createWorkoutTemplate(
+  data: z.infer<typeof CreateWorkoutTemplateSchema>
+) {
   try {
     const validatedData = CreateWorkoutTemplateSchema.parse(data)
-    
+
     const template = await prisma.workout_templates.create({
       data: validatedData,
     })
-    
+
     revalidatePath('/templates')
     return { success: true, data: template }
   } catch (error) {
@@ -288,7 +303,7 @@ export async function getWorkoutTemplates(userId?: string) {
         },
       },
     })
-    
+
     return { success: true, data: templates }
   } catch (error) {
     console.error('Error fetching workout templates:', error)
@@ -308,7 +323,7 @@ export async function getWorkoutTemplateById(id: bigint) {
         },
       },
     })
-    
+
     return { success: true, data: template }
   } catch (error) {
     console.error('Error fetching workout template:', error)
@@ -316,13 +331,16 @@ export async function getWorkoutTemplateById(id: bigint) {
   }
 }
 
-export async function updateWorkoutTemplate(id: bigint, data: Partial<z.infer<typeof CreateWorkoutTemplateSchema>>) {
+export async function updateWorkoutTemplate(
+  id: bigint,
+  data: Partial<z.infer<typeof CreateWorkoutTemplateSchema>>
+) {
   try {
     const template = await prisma.workout_templates.update({
       where: { id },
       data,
     })
-    
+
     revalidatePath('/templates')
     return { success: true, data: template }
   } catch (error) {
@@ -336,7 +354,7 @@ export async function deleteWorkoutTemplate(id: bigint) {
     await prisma.workout_templates.delete({
       where: { id },
     })
-    
+
     revalidatePath('/templates')
     return { success: true }
   } catch (error) {
@@ -351,7 +369,7 @@ export async function getUserProfile(userId: string) {
     const profile = await prisma.user_profiles.findFirst({
       where: { user_id: userId },
     })
-    
+
     return { success: true, data: profile }
   } catch (error) {
     console.error('Error fetching user profile:', error)
@@ -359,14 +377,17 @@ export async function getUserProfile(userId: string) {
   }
 }
 
-export async function createOrUpdateUserProfile(userId: string, data: {
-  name?: string
-  age?: number
-  weight?: number
-  fitness_level?: string
-  goal?: string
-  weight_history?: any
-}) {
+export async function createOrUpdateUserProfile(
+  userId: string,
+  data: {
+    name?: string
+    age?: number
+    weight?: number
+    fitness_level?: string
+    goal?: string
+    weight_history?: number[]
+  }
+) {
   try {
     // First try to find existing profile
     const existingProfile = await prisma.user_profiles.findFirst({
@@ -389,7 +410,7 @@ export async function createOrUpdateUserProfile(userId: string, data: {
         },
       })
     }
-    
+
     revalidatePath('/profile')
     return { success: true, data: profile }
   } catch (error) {
@@ -399,7 +420,11 @@ export async function createOrUpdateUserProfile(userId: string, data: {
 }
 
 // Search and Filter Actions
-export async function searchExercises(query: string, bodypart?: string, category?: string) {
+export async function searchExercises(
+  query: string,
+  bodypart?: string,
+  category?: string
+) {
   try {
     const exercises = await prisma.excercise.findMany({
       where: {
@@ -411,8 +436,12 @@ export async function searchExercises(query: string, bodypart?: string, category
               { secondary_bodypart: { contains: query, mode: 'insensitive' } },
             ],
           },
-          bodypart ? { primary_bodypart: { equals: bodypart, mode: 'insensitive' } } : {},
-          category ? { category: { equals: category, mode: 'insensitive' } } : {},
+          bodypart
+            ? { primary_bodypart: { equals: bodypart, mode: 'insensitive' } }
+            : {},
+          category
+            ? { category: { equals: category, mode: 'insensitive' } }
+            : {},
         ],
       },
       include: {
@@ -420,7 +449,7 @@ export async function searchExercises(query: string, bodypart?: string, category
         user_preferences: true,
       },
     })
-    
+
     return { success: true, data: exercises }
   } catch (error) {
     console.error('Error searching exercises:', error)
@@ -428,17 +457,22 @@ export async function searchExercises(query: string, bodypart?: string, category
   }
 }
 
-export async function getWorkoutStats(userId: string, dateFrom?: Date, dateTo?: Date) {
+export async function getWorkoutStats(
+  userId: string,
+  dateFrom?: Date,
+  dateTo?: Date
+) {
   try {
     const stats = await prisma.sets.aggregate({
       where: {
         user_id: userId,
-        ...(dateFrom && dateTo && {
-          created_at: {
-            gte: dateFrom,
-            lte: dateTo,
-          },
-        }),
+        ...(dateFrom &&
+          dateTo && {
+            created_at: {
+              gte: dateFrom,
+              lte: dateTo,
+            },
+          }),
       },
       _count: {
         id: true,
@@ -452,10 +486,10 @@ export async function getWorkoutStats(userId: string, dateFrom?: Date, dateTo?: 
         reps: true,
       },
     })
-    
+
     return { success: true, data: stats }
   } catch (error) {
     console.error('Error fetching workout stats:', error)
     return { success: false, error: 'Failed to fetch workout stats' }
   }
-} 
+}

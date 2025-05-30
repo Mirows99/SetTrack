@@ -1,32 +1,24 @@
-"use client";
+'use client'
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { 
-  ArrowLeft, 
-  Play, 
-  GripVertical, 
-  Edit3, 
-  Trash2, 
-  Save, 
+import {
+  ArrowLeft,
+  Play,
+  Edit3,
+  Trash2,
+  Save,
   X,
   Clock,
   Target,
-  Zap
+  Zap,
 } from 'lucide-react'
 import Link from 'next/link'
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
 
 // Mock workout data
 interface WorkoutExercise {
@@ -64,7 +56,7 @@ const generateMockWorkout = (): WorkoutPlan => {
       restTime: 60,
       category: 'Bodyweight',
       primaryBodypart: 'Chest',
-      notes: 'Keep your core tight throughout the movement'
+      notes: 'Keep your core tight throughout the movement',
     },
     {
       id: '2',
@@ -74,7 +66,7 @@ const generateMockWorkout = (): WorkoutPlan => {
       weight: null,
       restTime: 90,
       category: 'Bodyweight',
-      primaryBodypart: 'Legs'
+      primaryBodypart: 'Legs',
     },
     {
       id: '3',
@@ -84,7 +76,7 @@ const generateMockWorkout = (): WorkoutPlan => {
       weight: null,
       restTime: 60,
       category: 'Bodyweight',
-      primaryBodypart: 'Core'
+      primaryBodypart: 'Core',
     },
     {
       id: '4',
@@ -94,7 +86,7 @@ const generateMockWorkout = (): WorkoutPlan => {
       weight: null,
       restTime: 45,
       category: 'Cardio',
-      primaryBodypart: 'Full Body'
+      primaryBodypart: 'Full Body',
     },
     {
       id: '5',
@@ -105,8 +97,8 @@ const generateMockWorkout = (): WorkoutPlan => {
       restTime: 120,
       category: 'Cardio',
       primaryBodypart: 'Full Body',
-      notes: 'Take your time, focus on form over speed'
-    }
+      notes: 'Take your time, focus on form over speed',
+    },
   ]
 
   return {
@@ -117,7 +109,7 @@ const generateMockWorkout = (): WorkoutPlan => {
     location: 'home-no-equipment',
     intensity: 'intermediate',
     exercises: mockExercises,
-    estimatedTime: 25
+    estimatedTime: 25,
   }
 }
 
@@ -141,15 +133,15 @@ export default function WorkoutResultPage() {
   const handleSaveEdit = () => {
     if (!workout || !editingExercise) return
 
-    setWorkout(prev => {
+    setWorkout((prev) => {
       if (!prev) return prev
       return {
         ...prev,
-        exercises: prev.exercises.map(ex => 
-          ex.id === editingExercise 
-            ? { ...ex, ...editForm } as WorkoutExercise
+        exercises: prev.exercises.map((ex) =>
+          ex.id === editingExercise
+            ? ({ ...ex, ...editForm } as WorkoutExercise)
             : ex
-        )
+        ),
       }
     })
     setEditingExercise(null)
@@ -163,12 +155,12 @@ export default function WorkoutResultPage() {
 
   const handleDeleteExercise = (exerciseId: string) => {
     if (!workout) return
-    
-    setWorkout(prev => {
+
+    setWorkout((prev) => {
       if (!prev) return prev
       return {
         ...prev,
-        exercises: prev.exercises.filter(ex => ex.id !== exerciseId)
+        exercises: prev.exercises.filter((ex) => ex.id !== exerciseId),
       }
     })
   }
@@ -177,18 +169,21 @@ export default function WorkoutResultPage() {
     if (!workout) return
 
     const exercises = [...workout.exercises]
-    const currentIndex = exercises.findIndex(ex => ex.id === exerciseId)
-    
+    const currentIndex = exercises.findIndex((ex) => ex.id === exerciseId)
+
     if (currentIndex === -1) return
-    
+
     const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1
-    
+
     if (newIndex < 0 || newIndex >= exercises.length) return
-    
+
     // Swap exercises
-    [exercises[currentIndex], exercises[newIndex]] = [exercises[newIndex], exercises[currentIndex]]
-    
-    setWorkout(prev => {
+    ;[exercises[currentIndex], exercises[newIndex]] = [
+      exercises[newIndex],
+      exercises[currentIndex],
+    ]
+
+    setWorkout((prev) => {
       if (!prev) return prev
       return { ...prev, exercises }
     })
@@ -206,7 +201,9 @@ export default function WorkoutResultPage() {
     if (seconds < 60) return `${seconds}s`
     const minutes = Math.floor(seconds / 60)
     const remainingSeconds = seconds % 60
-    return remainingSeconds > 0 ? `${minutes}m ${remainingSeconds}s` : `${minutes}m`
+    return remainingSeconds > 0
+      ? `${minutes}m ${remainingSeconds}s`
+      : `${minutes}m`
   }
 
   if (!workout) {
@@ -258,7 +255,7 @@ export default function WorkoutResultPage() {
             <div>
               <p className="text-sm text-muted-foreground mb-1">Target Areas</p>
               <div className="flex flex-wrap gap-1">
-                {workout.bodyParts.map(part => (
+                {workout.bodyParts.map((part) => (
                   <Badge key={part} variant="secondary" className="text-xs">
                     {part.replace('-', ' ')}
                   </Badge>
@@ -271,8 +268,10 @@ export default function WorkoutResultPage() {
 
       {/* Exercise List */}
       <div className="space-y-4">
-        <h2 className="text-xl font-semibold">Exercises ({workout.exercises.length})</h2>
-        
+        <h2 className="text-xl font-semibold">
+          Exercises ({workout.exercises.length})
+        </h2>
+
         {workout.exercises.map((exercise, index) => (
           <Card key={exercise.id} className="relative">
             <CardContent className="p-6">
@@ -285,7 +284,12 @@ export default function WorkoutResultPage() {
                       <Input
                         id="exercise-name"
                         value={editForm.name || ''}
-                        onChange={(e) => setEditForm(prev => ({ ...prev, name: e.target.value }))}
+                        onChange={(e) =>
+                          setEditForm((prev) => ({
+                            ...prev,
+                            name: e.target.value,
+                          }))
+                        }
                       />
                     </div>
                     <div>
@@ -294,7 +298,12 @@ export default function WorkoutResultPage() {
                         id="exercise-sets"
                         type="number"
                         value={editForm.sets || ''}
-                        onChange={(e) => setEditForm(prev => ({ ...prev, sets: parseInt(e.target.value) }))}
+                        onChange={(e) =>
+                          setEditForm((prev) => ({
+                            ...prev,
+                            sets: parseInt(e.target.value),
+                          }))
+                        }
                       />
                     </div>
                     <div>
@@ -302,7 +311,12 @@ export default function WorkoutResultPage() {
                       <Input
                         id="exercise-reps"
                         value={editForm.reps || ''}
-                        onChange={(e) => setEditForm(prev => ({ ...prev, reps: e.target.value }))}
+                        onChange={(e) =>
+                          setEditForm((prev) => ({
+                            ...prev,
+                            reps: e.target.value,
+                          }))
+                        }
                       />
                     </div>
                     <div>
@@ -311,7 +325,12 @@ export default function WorkoutResultPage() {
                         id="exercise-rest"
                         type="number"
                         value={editForm.restTime || ''}
-                        onChange={(e) => setEditForm(prev => ({ ...prev, restTime: parseInt(e.target.value) }))}
+                        onChange={(e) =>
+                          setEditForm((prev) => ({
+                            ...prev,
+                            restTime: parseInt(e.target.value),
+                          }))
+                        }
                       />
                     </div>
                   </div>
@@ -320,16 +339,30 @@ export default function WorkoutResultPage() {
                     <Input
                       id="exercise-notes"
                       value={editForm.notes || ''}
-                      onChange={(e) => setEditForm(prev => ({ ...prev, notes: e.target.value }))}
+                      onChange={(e) =>
+                        setEditForm((prev) => ({
+                          ...prev,
+                          notes: e.target.value,
+                        }))
+                      }
                       placeholder="Any specific instructions or modifications"
                     />
                   </div>
                   <div className="flex gap-2">
-                    <Button onClick={handleSaveEdit} size="sm" className="gap-2">
+                    <Button
+                      onClick={handleSaveEdit}
+                      size="sm"
+                      className="gap-2"
+                    >
                       <Save className="h-4 w-4" />
                       Save
                     </Button>
-                    <Button onClick={handleCancelEdit} variant="outline" size="sm" className="gap-2">
+                    <Button
+                      onClick={handleCancelEdit}
+                      variant="outline"
+                      size="sm"
+                      className="gap-2"
+                    >
                       <X className="h-4 w-4" />
                       Cancel
                     </Button>
@@ -369,11 +402,15 @@ export default function WorkoutResultPage() {
                   <div className="flex-1 space-y-2">
                     <div className="flex items-start justify-between">
                       <div>
-                        <h3 className="font-semibold text-lg">{exercise.name}</h3>
+                        <h3 className="font-semibold text-lg">
+                          {exercise.name}
+                        </h3>
                         <div className="flex items-center gap-4 text-sm text-muted-foreground">
                           <span>{exercise.sets} sets</span>
                           <span>{exercise.reps} reps</span>
-                          {exercise.weight && <span>{exercise.weight} lbs</span>}
+                          {exercise.weight && (
+                            <span>{exercise.weight} lbs</span>
+                          )}
                           <span>Rest: {formatRestTime(exercise.restTime)}</span>
                         </div>
                       </div>
@@ -399,7 +436,9 @@ export default function WorkoutResultPage() {
 
                     <div className="flex items-center gap-2">
                       <Badge variant="outline">{exercise.category}</Badge>
-                      <Badge variant="secondary">{exercise.primaryBodypart}</Badge>
+                      <Badge variant="secondary">
+                        {exercise.primaryBodypart}
+                      </Badge>
                     </div>
 
                     {exercise.notes && (
@@ -429,4 +468,4 @@ export default function WorkoutResultPage() {
       </div>
     </div>
   )
-} 
+}

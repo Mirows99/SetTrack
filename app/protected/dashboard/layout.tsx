@@ -1,9 +1,8 @@
-"use client"
+'use client'
 
 import { ReactNode } from 'react'
 import BottomTabNavigation from '@/components/dashboard/bottom-tab-navigation'
 import { useIsMobile } from '@/hooks/use-mobile'
-
 
 interface DashboardLayoutProps {
   children: ReactNode
@@ -21,7 +20,7 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
               since it needs the user data from the server component */}
         </div>
       )}
-      
+
       <main className={`flex-1 pb-16 md:pb-0 ${isMobile ? 'pt-12' : ''}`}>
         {children}
       </main>
@@ -34,4 +33,4 @@ export default function DashboardLayout({ children }: DashboardLayoutProps) {
       )}
     </div>
   )
-} 
+}

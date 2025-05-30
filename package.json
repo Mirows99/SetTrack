@@ -6,10 +6,15 @@
     "dev": "next dev --turbopack",
     "build": "bun run env:refresh && next build",
     "start": "next start",
-    "lint": "next lint",
     "env:load": "op inject -i .env.template -o .env",
     "env:refresh": "rm -f .env && op inject -i .env.template -o .env",
-    "dev:refresh": "bun run env:refresh && next dev --turbopack"
+    "dev:refresh": "bun run env:refresh && next dev --turbopack",
+    "lint": "next lint",
+    "lint:fix": "next lint --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint-and-format": "bun run lint:fix && bun run format",
+    "check-all": "bun run lint && bun run format:check"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.0.1",
@@ -73,6 +78,9 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.3.2",
+    "eslint-config-prettier": "^10.1.5",
+    "eslint-plugin-unused-imports": "^4.1.4",
+    "prettier": "^3.5.3",
     "tailwindcss": "^4",
     "tw-animate-css": "^1.2.9",
     "typescript": "^5"

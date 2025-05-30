@@ -1,8 +1,8 @@
-import { Button } from "@/components/ui/button";
-import { PlusCircle } from "lucide-react";
+import { Button } from '@/components/ui/button'
+import { PlusCircle } from 'lucide-react'
 
 interface EmptyExercisesStateProps {
-  groupName: string;
+  groupName: string
 }
 
 export function EmptyExercisesState({ groupName }: EmptyExercisesStateProps) {
@@ -16,5 +16,5 @@ export function EmptyExercisesState({ groupName }: EmptyExercisesStateProps) {
         Add {groupName} Exercise
       </Button>
     </div>
-  );
-} 
+  )
+}

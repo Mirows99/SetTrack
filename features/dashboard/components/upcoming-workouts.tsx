@@ -1,10 +1,17 @@
-"use client"
+'use client'
 
 import { useState } from 'react'
 import { CalendarIcon, CheckIcon, PlusIcon } from 'lucide-react'
 import { format, addDays } from 'date-fns'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 
 // Mock data for upcoming workouts
@@ -15,7 +22,7 @@ const mockUpcomingWorkouts = [
     date: addDays(new Date(), 1),
     exercises: ['Squats', 'Deadlifts', 'Leg Press'],
     type: 'strength',
-    duration: 60
+    duration: 60,
   },
   {
     id: '2',
@@ -23,7 +30,7 @@ const mockUpcomingWorkouts = [
     date: addDays(new Date(), 3),
     exercises: ['Bench Press', 'Pull-ups', 'Shoulder Press'],
     type: 'strength',
-    duration: 45
+    duration: 45,
   },
   {
     id: '3',
@@ -31,8 +38,8 @@ const mockUpcomingWorkouts = [
     date: addDays(new Date(), 5),
     exercises: ['Burpees', 'Mountain Climbers', 'Jump Squats'],
     type: 'cardio',
-    duration: 30
-  }
+    duration: 30,
+  },
 ]
 
 export default function UpcomingWorkouts() {
@@ -47,20 +54,25 @@ export default function UpcomingWorkouts() {
       <CardContent>
         <div className="space-y-4">
           {upcomingWorkouts.map((workout) => (
-            <div 
-              key={workout.id} 
+            <div
+              key={workout.id}
               className="flex items-start justify-between border-b pb-4 last:border-0"
             >
               <div className="flex-1">
                 <div className="flex items-center gap-2">
                   <h3 className="font-medium">{workout.name}</h3>
-                  <Badge variant={workout.type === 'strength' ? 'default' : 'secondary'}>
+                  <Badge
+                    variant={
+                      workout.type === 'strength' ? 'default' : 'secondary'
+                    }
+                  >
                     {workout.type}
                   </Badge>
                 </div>
                 <div className="mt-1 flex items-center text-sm text-muted-foreground">
                   <CalendarIcon className="mr-1 h-3 w-3" />
-                  {format(workout.date, 'EEEE, MMM dd')} • {workout.duration} min
+                  {format(workout.date, 'EEEE, MMM dd')} • {workout.duration}{' '}
+                  min
                 </div>
                 <div className="mt-2 text-xs text-muted-foreground">
                   {workout.exercises.join(', ')}
@@ -77,7 +89,9 @@ export default function UpcomingWorkouts() {
 
           {upcomingWorkouts.length === 0 && (
             <div className="flex flex-col items-center justify-center py-8 text-center">
-              <p className="text-sm text-muted-foreground">No upcoming workouts</p>
+              <p className="text-sm text-muted-foreground">
+                No upcoming workouts
+              </p>
               <p className="text-xs text-muted-foreground mt-1">
                 Plan your next training session to stay on track
               </p>
@@ -93,4 +107,4 @@ export default function UpcomingWorkouts() {
       </CardFooter>
     </Card>
   )
-} 
+}

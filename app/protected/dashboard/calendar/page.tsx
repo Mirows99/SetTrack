@@ -14,7 +14,7 @@ export default async function CalendarPage() {
   return (
     <div className="container py-6 space-y-8">
       <ConditionalHeader user={data.user} />
-      
+
       <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Calendar</h1>
@@ -23,8 +23,8 @@ export default async function CalendarPage() {
           </p>
         </div>
       </div>
-      
+
       <CalendarContent />
     </div>
   )
-} 
+}

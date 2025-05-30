@@ -1,7 +1,13 @@
-"use client"
+'use client'
 
 import { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Calendar } from '@/components/ui/calendar'
 
 export default function CalendarContent() {
@@ -13,7 +19,9 @@ export default function CalendarContent() {
         <Card>
           <CardHeader>
             <CardTitle>Workout Schedule</CardTitle>
-            <CardDescription>View your planned workouts and training sessions</CardDescription>
+            <CardDescription>
+              View your planned workouts and training sessions
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <Calendar
@@ -25,7 +33,7 @@ export default function CalendarContent() {
           </CardContent>
         </Card>
       </div>
-      
+
       <div className="space-y-6">
         <Card>
           <CardHeader>
@@ -38,7 +46,9 @@ export default function CalendarContent() {
                 <div className="flex justify-between items-center">
                   <div>
                     <div className="font-medium">Upper Body Strength</div>
-                    <div className="text-sm text-muted-foreground">Tomorrow, 10:00 AM</div>
+                    <div className="text-sm text-muted-foreground">
+                      Tomorrow, 10:00 AM
+                    </div>
                   </div>
                   <div className="text-sm text-muted-foreground">45 min</div>
                 </div>
@@ -47,7 +57,9 @@ export default function CalendarContent() {
                 <div className="flex justify-between items-center">
                   <div>
                     <div className="font-medium">Cardio Session</div>
-                    <div className="text-sm text-muted-foreground">Thursday, 2:00 PM</div>
+                    <div className="text-sm text-muted-foreground">
+                      Thursday, 2:00 PM
+                    </div>
                   </div>
                   <div className="text-sm text-muted-foreground">30 min</div>
                 </div>
@@ -56,7 +68,9 @@ export default function CalendarContent() {
                 <div className="flex justify-between items-center">
                   <div>
                     <div className="font-medium">Leg Day</div>
-                    <div className="text-sm text-muted-foreground">Saturday, 11:00 AM</div>
+                    <div className="text-sm text-muted-foreground">
+                      Saturday, 11:00 AM
+                    </div>
                   </div>
                   <div className="text-sm text-muted-foreground">60 min</div>
                 </div>
@@ -64,11 +78,13 @@ export default function CalendarContent() {
             </div>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader>
             <CardTitle>Monthly Overview</CardTitle>
-            <CardDescription>Your training frequency this month</CardDescription>
+            <CardDescription>
+              Your training frequency this month
+            </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -94,4 +110,4 @@ export default function CalendarContent() {
       </div>
     </div>
   )
-} 
+}

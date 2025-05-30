@@ -1,10 +1,10 @@
-"use client"
+'use client'
 
-import { 
-  CalendarIcon, 
-  DumbbellIcon, 
-  LineChartIcon, 
-  UserIcon 
+import {
+  CalendarIcon,
+  DumbbellIcon,
+  LineChartIcon,
+  UserIcon,
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -14,7 +14,9 @@ export interface BottomTabNavigationProps {
   className?: string
 }
 
-export default function BottomTabNavigation({ className }: BottomTabNavigationProps) {
+export default function BottomTabNavigation({
+  className,
+}: BottomTabNavigationProps) {
   const pathname = usePathname()
 
   const navItems = [
@@ -41,29 +43,33 @@ export default function BottomTabNavigation({ className }: BottomTabNavigationPr
   ]
 
   return (
-    <div className={cn("flex items-center justify-around py-2", className)}>
+    <div className={cn('flex items-center justify-around py-2', className)}>
       {navItems.map((item) => {
         const isActive = pathname === item.href
-        
+
         return (
-          <Link 
-            key={item.href} 
+          <Link
+            key={item.href}
             href={item.href}
             className={cn(
-              "flex flex-col items-center justify-center px-3 py-2 rounded-md transition-all duration-200",
-              isActive 
-                ? "text-primary scale-105" 
-                : "text-muted-foreground hover:text-foreground active:scale-95"
+              'flex flex-col items-center justify-center px-3 py-2 rounded-md transition-all duration-200',
+              isActive
+                ? 'text-primary scale-105'
+                : 'text-muted-foreground hover:text-foreground active:scale-95'
             )}
           >
-            <item.icon className={cn(
-              "h-5 w-5 mb-1 transition-transform",
-              isActive ? "text-primary" : "text-muted-foreground"
-            )} />
-            <span className={cn(
-              "text-xs font-medium transition-all",
-              isActive ? "font-semibold" : ""
-            )}>
+            <item.icon
+              className={cn(
+                'h-5 w-5 mb-1 transition-transform',
+                isActive ? 'text-primary' : 'text-muted-foreground'
+              )}
+            />
+            <span
+              className={cn(
+                'text-xs font-medium transition-all',
+                isActive ? 'font-semibold' : ''
+              )}
+            >
               {item.label}
             </span>
           </Link>
@@ -71,4 +77,4 @@ export default function BottomTabNavigation({ className }: BottomTabNavigationPr
       })}
     </div>
   )
-} 
+}

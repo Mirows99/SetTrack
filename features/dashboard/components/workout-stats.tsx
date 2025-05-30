@@ -1,12 +1,18 @@
-"use client"
+'use client'
 
-import { 
-  ActivityIcon, 
-  CalendarIcon, 
-  FlameIcon, 
-  TrendingUpIcon 
+import {
+  ActivityIcon,
+  CalendarIcon,
+  FlameIcon,
+  TrendingUpIcon,
 } from 'lucide-react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 export default function WorkoutStats() {
@@ -25,97 +31,97 @@ export default function WorkoutStats() {
           </TabsList>
           <TabsContent value="week" className="pt-4 space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <StatsCard 
-                title="Workouts" 
-                value="5" 
-                description="3 more than last week" 
+              <StatsCard
+                title="Workouts"
+                value="5"
+                description="3 more than last week"
                 trend="up"
-                icon={ActivityIcon} 
+                icon={ActivityIcon}
               />
-              <StatsCard 
-                title="Active Days" 
-                value="4" 
-                description="1 more than last week" 
+              <StatsCard
+                title="Active Days"
+                value="4"
+                description="1 more than last week"
                 trend="up"
-                icon={CalendarIcon} 
+                icon={CalendarIcon}
               />
-              <StatsCard 
-                title="Calories" 
-                value="2,450" 
-                description="750 more than last week" 
+              <StatsCard
+                title="Calories"
+                value="2,450"
+                description="750 more than last week"
                 trend="up"
-                icon={FlameIcon} 
+                icon={FlameIcon}
               />
-              <StatsCard 
-                title="Progress" 
-                value="15%" 
-                description="5% increase from last week" 
+              <StatsCard
+                title="Progress"
+                value="15%"
+                description="5% increase from last week"
                 trend="up"
-                icon={TrendingUpIcon} 
+                icon={TrendingUpIcon}
               />
             </div>
           </TabsContent>
           <TabsContent value="month" className="pt-4 space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <StatsCard 
-                title="Workouts" 
-                value="18" 
-                description="2 more than last month" 
+              <StatsCard
+                title="Workouts"
+                value="18"
+                description="2 more than last month"
                 trend="up"
-                icon={ActivityIcon} 
+                icon={ActivityIcon}
               />
-              <StatsCard 
-                title="Active Days" 
-                value="15" 
-                description="3 more than last month" 
+              <StatsCard
+                title="Active Days"
+                value="15"
+                description="3 more than last month"
                 trend="up"
-                icon={CalendarIcon} 
+                icon={CalendarIcon}
               />
-              <StatsCard 
-                title="Calories" 
-                value="9,650" 
-                description="1,200 more than last month" 
+              <StatsCard
+                title="Calories"
+                value="9,650"
+                description="1,200 more than last month"
                 trend="up"
-                icon={FlameIcon} 
+                icon={FlameIcon}
               />
-              <StatsCard 
-                title="Progress" 
-                value="22%" 
-                description="7% increase from last month" 
+              <StatsCard
+                title="Progress"
+                value="22%"
+                description="7% increase from last month"
                 trend="up"
-                icon={TrendingUpIcon} 
+                icon={TrendingUpIcon}
               />
             </div>
           </TabsContent>
           <TabsContent value="year" className="pt-4 space-y-4">
             <div className="grid grid-cols-2 gap-4">
-              <StatsCard 
-                title="Workouts" 
-                value="156" 
-                description="34 more than last year" 
+              <StatsCard
+                title="Workouts"
+                value="156"
+                description="34 more than last year"
                 trend="up"
-                icon={ActivityIcon} 
+                icon={ActivityIcon}
               />
-              <StatsCard 
-                title="Active Days" 
-                value="142" 
-                description="28 more than last year" 
+              <StatsCard
+                title="Active Days"
+                value="142"
+                description="28 more than last year"
                 trend="up"
-                icon={CalendarIcon} 
+                icon={CalendarIcon}
               />
-              <StatsCard 
-                title="Calories" 
-                value="85,320" 
-                description="15,400 more than last year" 
+              <StatsCard
+                title="Calories"
+                value="85,320"
+                description="15,400 more than last year"
                 trend="up"
-                icon={FlameIcon} 
+                icon={FlameIcon}
               />
-              <StatsCard 
-                title="Progress" 
-                value="75%" 
-                description="25% increase from last year" 
+              <StatsCard
+                title="Progress"
+                value="75%"
+                description="25% increase from last year"
                 trend="up"
-                icon={TrendingUpIcon} 
+                icon={TrendingUpIcon}
               />
             </div>
           </TabsContent>
@@ -133,7 +139,13 @@ interface StatsCardProps {
   icon: React.ElementType
 }
 
-function StatsCard({ title, value, description, trend, icon: Icon }: StatsCardProps) {
+function StatsCard({
+  title,
+  value,
+  description,
+  trend,
+  icon: Icon,
+}: StatsCardProps) {
   return (
     <div className="rounded-lg border p-3">
       <div className="flex items-center justify-between">
@@ -142,16 +154,18 @@ function StatsCard({ title, value, description, trend, icon: Icon }: StatsCardPr
       </div>
       <div className="mt-1 text-2xl font-bold">{value}</div>
       <div className="mt-1 flex items-center text-xs">
-        <span className={
-          trend === 'up' 
-            ? 'text-green-500' 
-            : trend === 'down' 
-              ? 'text-red-500' 
-              : 'text-muted-foreground'
-        }>
+        <span
+          className={
+            trend === 'up'
+              ? 'text-green-500'
+              : trend === 'down'
+                ? 'text-red-500'
+                : 'text-muted-foreground'
+          }
+        >
           {description}
         </span>
       </div>
     </div>
   )
-} 
+}

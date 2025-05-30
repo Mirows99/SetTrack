@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { useState } from 'react'
 import { User } from '@supabase/supabase-js'
@@ -17,35 +17,48 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card'
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card'
 import { toast } from 'sonner'
 import { useSupabase } from '@/providers/supabase-provider'
 
 const profileFormSchema = z.object({
   fullName: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
+    message: 'Name must be at least 2 characters.',
   }),
   age: z.coerce.number().min(0, {
-    message: "Age must be a positive number.",
+    message: 'Age must be a positive number.',
   }),
   gender: z.string().min(1, {
-    message: "Please select a gender.",
+    message: 'Please select a gender.',
   }),
   height: z.coerce.number().min(0, {
-    message: "Height must be a positive number.",
+    message: 'Height must be a positive number.',
   }),
   weight: z.coerce.number().min(0, {
-    message: "Weight must be a positive number.",
+    message: 'Weight must be a positive number.',
   }),
   fitnessLevel: z.string().min(1, {
-    message: "Please select a fitness level.",
+    message: 'Please select a fitness level.',
   }),
   goal: z.string().min(1, {
-    message: "Please select a goal.",
+    message: 'Please select a goal.',
   }),
   bio: z.string().max(500, {
-    message: "Bio must not be longer than 500 characters.",
+    message: 'Bio must not be longer than 500 characters.',
   }),
 })
 
@@ -61,40 +74,37 @@ export default function ProfileForm({ user }: ProfileFormProps) {
 
   // Default values for the form
   const defaultValues: Partial<ProfileFormValues> = {
-    fullName: "",
+    fullName: '',
     age: 0,
-    gender: "",
+    gender: '',
     height: 0,
     weight: 0,
-    fitnessLevel: "",
-    goal: "",
-    bio: "",
+    fitnessLevel: '',
+    goal: '',
+    bio: '',
   }
 
   const form = useForm<ProfileFormValues>({
     resolver: zodResolver(profileFormSchema),
     defaultValues,
-    mode: "onChange",
+    mode: 'onChange',
   })
 
   async function onSubmit(data: ProfileFormValues) {
     setIsSaving(true)
 
     try {
-
-      const { error } = await supabase
-        .from('user_profiles')
-        .insert({
-          user_id: user.id,
-          name: data.fullName,
-          age: data.age,
-          gender: data.gender,
-          height: data.height,
-          weight: data.weight,
-          fitness_level: data.fitnessLevel,
-          goal: data.goal,
-          bio: data.bio,
-        })
+      const { error } = await supabase.from('user_profiles').insert({
+        user_id: user.id,
+        name: data.fullName,
+        age: data.age,
+        gender: data.gender,
+        height: data.height,
+        weight: data.weight,
+        fitness_level: data.fitnessLevel,
+        goal: data.goal,
+        bio: data.bio,
+      })
 
       if (error) {
         console.error('Error saving Profile:', error)
@@ -102,9 +112,9 @@ export default function ProfileForm({ user }: ProfileFormProps) {
         return
       }
 
-      toast.success("Profile updated successfully")
+      toast.success('Profile updated successfully')
     } catch (error) {
-      toast.error("Failed to update profile")
+      toast.error('Failed to update profile')
       console.error(error)
     } finally {
       setIsSaving(false)
@@ -115,7 +125,9 @@ export default function ProfileForm({ user }: ProfileFormProps) {
     <Card>
       <CardHeader>
         <CardTitle>Personal Information</CardTitle>
-        <CardDescription>Update your profile information and preferences</CardDescription>
+        <CardDescription>
+          Update your profile information and preferences
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Form {...form}>
@@ -155,7 +167,10 @@ export default function ProfileForm({ user }: ProfileFormProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Gender</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select gender" />
@@ -165,7 +180,9 @@ export default function ProfileForm({ user }: ProfileFormProps) {
                         <SelectItem value="male">Male</SelectItem>
                         <SelectItem value="female">Female</SelectItem>
                         <SelectItem value="other">Other</SelectItem>
-                        <SelectItem value="prefer-not-to-say">Prefer not to say</SelectItem>
+                        <SelectItem value="prefer-not-to-say">
+                          Prefer not to say
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -211,7 +228,10 @@ export default function ProfileForm({ user }: ProfileFormProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Fitness Level</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select level" />
@@ -219,9 +239,13 @@ export default function ProfileForm({ user }: ProfileFormProps) {
                       </FormControl>
                       <SelectContent>
                         <SelectItem value="beginner">Beginner</SelectItem>
-                        <SelectItem value="intermediate">Intermediate</SelectItem>
+                        <SelectItem value="intermediate">
+                          Intermediate
+                        </SelectItem>
                         <SelectItem value="advanced">Advanced</SelectItem>
-                        <SelectItem value="professional">Professional</SelectItem>
+                        <SelectItem value="professional">
+                          Professional
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                     <FormMessage />
@@ -235,7 +259,10 @@ export default function ProfileForm({ user }: ProfileFormProps) {
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Goal</FormLabel>
-                    <Select onValueChange={field.onChange} defaultValue={field.value}>
+                    <Select
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                    >
                       <FormControl>
                         <SelectTrigger>
                           <SelectValue placeholder="Select goal" />
@@ -244,7 +271,9 @@ export default function ProfileForm({ user }: ProfileFormProps) {
                       <SelectContent>
                         <SelectItem value="lose-weight">Lose Weight</SelectItem>
                         <SelectItem value="gain-muscle">Gain Muscle</SelectItem>
-                        <SelectItem value="improve-health">Improve Health</SelectItem>
+                        <SelectItem value="improve-health">
+                          Improve Health
+                        </SelectItem>
                         <SelectItem value="other">Other</SelectItem>
                       </SelectContent>
                     </Select>
@@ -276,11 +305,11 @@ export default function ProfileForm({ user }: ProfileFormProps) {
             />
 
             <Button type="submit" disabled={isSaving}>
-              {isSaving ? "Saving..." : "Save Changes"}
+              {isSaving ? 'Saving...' : 'Save Changes'}
             </Button>
           </form>
         </Form>
       </CardContent>
     </Card>
   )
-} 
+}

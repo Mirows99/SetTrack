@@ -1,11 +1,11 @@
-"use client"
+'use client'
 
 import { User } from '@supabase/supabase-js'
-import { 
-  CalendarIcon, 
-  DumbbellIcon, 
-  LineChartIcon, 
-  UserIcon 
+import {
+  CalendarIcon,
+  DumbbellIcon,
+  LineChartIcon,
+  UserIcon,
 } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
@@ -53,12 +53,12 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
               Welcome back, {user.email}
             </p>
           </div>
-          
+
           <div className="flex space-x-1">
             {navItems.map((item) => (
               <Link key={item.href} href={item.href}>
                 <Button
-                  variant={pathname === item.href ? "default" : "ghost"}
+                  variant={pathname === item.href ? 'default' : 'ghost'}
                   size="sm"
                   className="h-8"
                 >
@@ -73,4 +73,4 @@ export default function DashboardHeader({ user }: DashboardHeaderProps) {
       </CardContent>
     </Card>
   )
-} 
+}

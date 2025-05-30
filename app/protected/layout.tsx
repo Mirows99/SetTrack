@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { ReactNode } from 'react'
 import { useIsMobile } from '@/hooks/use-mobile'
@@ -19,10 +19,8 @@ export default function ProtectedLayout({ children }: ProtectedLayoutProps) {
               since it needs the user data from the server component */}
         </div>
       )}
-      
-      <main className={`flex-1`}>
-        {children}
-      </main>
+
+      <main className={`flex-1`}>{children}</main>
     </div>
   )
-} 
+}

@@ -1,4 +1,4 @@
-"use client"
+'use client'
 
 import { User } from '@supabase/supabase-js'
 import { useIsMobile } from '@/hooks/use-mobile'
@@ -11,10 +11,10 @@ interface ConditionalHeaderProps {
 
 export default function ConditionalHeader({ user }: ConditionalHeaderProps) {
   const isMobile = useIsMobile()
-  
+
   if (isMobile) {
     return <MobileHeader user={user} />
   }
-  
+
   return <DashboardHeader user={user} />
-} 
+}
