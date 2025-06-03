@@ -27,11 +27,25 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
       setLoading(false)
     })
 
-    // Trigger initial auth state check
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setUser(session?.user ?? null)
-      setLoading(false)
-    })
+    // Trigger initial auth state check using secure getUser() method
+    const getInitialUser = async () => {
+      try {
+        const { data: { user }, error } = await supabase.auth.getUser()
+        if (error) {
+          console.error('Error getting user:', error)
+          setUser(null)
+        } else {
+          setUser(user)
+        }
+      } catch (error) {
+        console.error('Error getting user:', error)
+        setUser(null)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    getInitialUser()
 
     return () => subscription.unsubscribe()
   }, [supabase.auth])
