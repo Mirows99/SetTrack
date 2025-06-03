@@ -175,9 +175,7 @@ export default function WorkoutResultPage() {
 
     const newIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1
 
-    if (newIndex < 0 || newIndex >= exercises.length) return
-
-    // Swap exercises
+    if (newIndex < 0 || newIndex >= exercises.length) return // Swap exercises
     ;[exercises[currentIndex], exercises[newIndex]] = [
       exercises[newIndex],
       exercises[currentIndex],

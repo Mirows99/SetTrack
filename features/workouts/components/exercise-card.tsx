@@ -30,7 +30,9 @@ export function ExerciseCard({ exercise }: ExerciseCardProps) {
       </CardHeader>
       <CardFooter className="pt-2">
         <Button variant="secondary" size="sm" className="w-full" asChild>
-          <Link href={`/protected/dashboard/workouts/exercise/${exercise.id.toString()}`}>
+          <Link
+            href={`/protected/dashboard/workouts/exercise/${exercise.id.toString()}`}
+          >
             Record set
           </Link>
         </Button>

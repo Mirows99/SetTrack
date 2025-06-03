@@ -40,11 +40,11 @@ export function AnalyticsCard({ exerciseId }: AnalyticsCardProps) {
 
     setIsLoading(true)
     setError(null)
-    
+
     try {
       // Use user ID as the top-level folder path for RLS compliance
       const filePath = `${user.id}/IMG_8917.JPG`
-      
+
       // Use Supabase Storage API to create a signed URL for private bucket access
       const { data, error: storageError } = await supabase.storage
         .from('user')
@@ -109,7 +109,9 @@ export function AnalyticsCard({ exerciseId }: AnalyticsCardProps) {
                 <p className="text-destructive text-sm">Error: {error}</p>
               )}
               {!user && (
-                <p className="text-muted-foreground">Please log in to view content</p>
+                <p className="text-muted-foreground">
+                  Please log in to view content
+                </p>
               )}
               {imageUrl && !isLoading && !error && (
                 <Image

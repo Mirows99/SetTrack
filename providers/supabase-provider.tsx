@@ -30,7 +30,10 @@ export function SupabaseProvider({ children }: { children: React.ReactNode }) {
     // Trigger initial auth state check using secure getUser() method
     const getInitialUser = async () => {
       try {
-        const { data: { user }, error } = await supabase.auth.getUser()
+        const {
+          data: { user },
+          error,
+        } = await supabase.auth.getUser()
         if (error) {
           console.error('Error getting user:', error)
           setUser(null)
