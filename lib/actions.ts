@@ -3,6 +3,7 @@
 import { revalidatePath } from 'next/cache'
 import prisma from '@/lib/prisma'
 import { z } from 'zod'
+import webpush from 'web-push'
 
 // Validation schemas
 const CreateExerciseSchema = z.object({
@@ -491,5 +492,55 @@ export async function getWorkoutStats(
   } catch (error) {
     console.error('Error fetching workout stats:', error)
     return { success: false, error: 'Failed to fetch workout stats' }
+  }
+}
+
+
+webpush.setVapidDetails(
+  'mailto:elias.ode@hansenexus.de',
+  process.env.NEXT_PUBLIC_VAPID_PUBLIC_KEY!,
+  process.env.VAPID_PRIVATE_KEY!
+)
+ 
+let subscription: PushSubscription | null = null
+ 
+export async function subscribeUser(sub: PushSubscription) {
+  subscription = sub
+  // In a production environment, you would want to store the subscription in a database
+  // For example: await db.subscriptions.create({ data: sub })
+  return { success: true }
+}
+ 
+export async function unsubscribeUser() {
+  subscription = null
+  // In a production environment, you would want to remove the subscription from the database
+  // For example: await db.subscriptions.delete({ where: { ... } })
+  return { success: true }
+}
+ 
+export async function sendNotification(message: string) {
+  if (!subscription) {
+    throw new Error('No subscription available')
+  }
+ 
+  try {
+    await webpush.sendNotification(
+      { // check this if something behaves weird
+        endpoint: subscription.endpoint,
+        keys: {
+          p256dh: subscription.getKey('p256dh') ? Buffer.from(subscription.getKey('p256dh')!).toString('base64') : '',
+          auth: subscription.getKey('auth') ? Buffer.from(subscription.getKey('auth')!).toString('base64') : '',
+        },
+      },
+      JSON.stringify({
+        title: 'Test Notification',
+        body: message,
+        icon: '/icon.png',
+      })
+    )
+    return { success: true }
+  } catch (error) {
+    console.error('Error sending push notification:', error)
+    return { success: false, error: 'Failed to send notification' }
   }
 }

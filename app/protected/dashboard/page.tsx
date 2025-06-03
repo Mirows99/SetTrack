@@ -7,6 +7,8 @@ import {
   ExerciseLibrary,
   UpcomingWorkouts,
 } from '@/features/dashboard'
+import InstallPrompt from '@/components/install-prompt'
+import PushNotificationManager from '@/components/push-notification'
 
 export default async function GymDashboardPage() {
   const supabase = await createClient()
@@ -24,6 +26,9 @@ export default async function GymDashboardPage() {
         <WorkoutStats />
         <UpcomingWorkouts />
       </div>
+
+      <InstallPrompt />
+      <PushNotificationManager />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <div className="lg:col-span-2">
