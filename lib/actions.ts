@@ -7,11 +7,13 @@ import { z } from 'zod'
 // Validation schemas
 const CreateExerciseSchema = z.object({
   name: z.string().min(1, 'Exercise name is required'),
+  body_region: z.string().min(1, 'Body region is required (UPPER or LOWER)'),
   primary_bodypart: z.string().min(1, 'Primary bodypart is required'),
   secondary_bodypart: z.string().optional(),
   category: z.string().optional(),
   level: z.string().optional(),
   created_by: z.string().uuid().optional(),
+  is_default: z.boolean(),
 })
 
 const CreateSetSchema = z.object({
@@ -54,7 +56,7 @@ export async function createExercise(
   }
 }
 
-export async function getExercises(limit?: number) {
+export async function getExercises(userId: string, limit?: number) {
   try {
     const exercises = await prisma.excercise.findMany({
       take: limit,
@@ -62,6 +64,9 @@ export async function getExercises(limit?: number) {
         sets: true,
         user_preferences: true,
         excercise_preset: true,
+      },
+      where: {
+        OR: [{ is_default: true }, { created_by: userId }],
       },
     })
 
