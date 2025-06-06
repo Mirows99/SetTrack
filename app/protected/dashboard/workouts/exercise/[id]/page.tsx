@@ -31,6 +31,7 @@ import { ExerciseLoadingSkeleton } from '@/features/workouts'
 import { getExerciseById, getSets, createSet } from '@/lib/actions'
 import { cn } from '@/lib/utils'
 import { useSupabase } from '@/providers/supabase-provider'
+import { useTimer } from '@/providers/timer-provider'
 
 type Exercise = {
   id: bigint
@@ -84,6 +85,7 @@ export default function ExercisePage({
   const resolvedParams = use(params)
   const exerciseId = resolvedParams.id
   const { user } = useSupabase()
+  const { startTimer } = useTimer()
 
   const form = useForm<SetFormValues>({
     resolver: zodResolver(setFormSchema),
@@ -176,6 +178,9 @@ export default function ExercisePage({
       // Reset form and close drawer
       form.reset()
       setIsDrawerOpen(false)
+      
+      // Start the rest timer (1:30 = 90 seconds)
+      startTimer(90)
     } catch (error) {
       console.error('Error saving set:', error)
       setError('Failed to save set. Please try again.')

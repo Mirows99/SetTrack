@@ -3,6 +3,8 @@ import localFont from 'next/font/local'
 
 import './globals.css'
 import { SupabaseProvider } from '@/providers/supabase-provider'
+import { TimerProvider } from '@/providers/timer-provider'
+import { FloatingTimer } from '@/components/timer-floating'
 
 import type { Metadata } from 'next'
 
@@ -53,7 +55,10 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} ${Watermelon.variable} antialiased px-4`}
       >
         <SupabaseProvider>
-          <div className="max-w-screen-xl mx-auto w-full">{children}</div>
+          <TimerProvider>
+            <div className="max-w-screen-xl mx-auto w-full">{children}</div>
+            <FloatingTimer />
+          </TimerProvider>
         </SupabaseProvider>
       </body>
     </html>
