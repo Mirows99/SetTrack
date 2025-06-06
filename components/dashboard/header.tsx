@@ -1,5 +1,8 @@
 'use client'
 
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
+
 import { User } from '@supabase/supabase-js'
 import {
   CalendarIcon,
@@ -7,11 +10,10 @@ import {
   LineChartIcon,
   UserIcon,
 } from 'lucide-react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+
+import { LogoutButton } from '@/components/logout-button'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { LogoutButton } from '@/components/logout-button'
 
 interface DashboardHeaderProps {
   user: User

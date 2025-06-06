@@ -1,8 +1,9 @@
 'use client'
 
-import { useSupabase } from '@/providers/supabase-provider'
-import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
+
+import { Button } from '@/components/ui/button'
+import { useSupabase } from '@/providers/supabase-provider'
 
 export function LogoutButton() {
   const { supabase } = useSupabase()

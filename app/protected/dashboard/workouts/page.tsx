@@ -1,7 +1,8 @@
 import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
+
 import ConditionalHeader from '@/components/dashboard/conditional-header'
 import { WorkoutOptionCard, WorkoutOptionType } from '@/features/workouts'
+import { createClient } from '@/lib/supabase/server'
 
 export default async function WorkoutsPage() {
   const supabase = await createClient()

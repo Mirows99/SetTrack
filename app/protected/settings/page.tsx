@@ -1,7 +1,7 @@
 'use client'
 
-import { Card, CardContent } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
+import { useRouter } from 'next/navigation'
+
 import {
   ArrowLeft,
   CreditCard,
@@ -12,7 +12,9 @@ import {
   Palette,
   HelpCircle,
 } from 'lucide-react'
-import { useRouter } from 'next/navigation'
+
+import { Button } from '@/components/ui/button'
+import { Card, CardContent } from '@/components/ui/card'
 
 export default function SettingsPage() {
   const router = useRouter()

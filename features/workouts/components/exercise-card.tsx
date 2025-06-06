@@ -59,36 +59,47 @@ export function ExerciseCard({ exercise }: ExerciseCardProps) {
           <CardTitle className="text-lg leading-tight group-hover:text-primary transition-colors">
             {exercise.name}
           </CardTitle>
-          <Badge 
-            variant="outline" 
+          <Badge
+            variant="outline"
             className={`ml-2 text-xs font-medium ${getLevelColor(exercise.level)}`}
           >
             {exercise.level || 'Beginner'}
           </Badge>
         </div>
-        
+
         <div className="flex flex-wrap gap-2 mt-3">
-          <Badge 
-            variant="outline" 
+          <Badge
+            variant="outline"
             className={`text-xs font-medium ${getCategoryColor(exercise.category)}`}
           >
             {exercise.category || 'General'}
           </Badge>
-          
-          <Badge variant="secondary" className="text-xs font-medium bg-slate-100 text-slate-700">
+
+          <Badge
+            variant="secondary"
+            className="text-xs font-medium bg-slate-100 text-slate-700"
+          >
             {exercise.primary_bodypart}
           </Badge>
-          
+
           {exercise.secondary_bodypart && (
-            <Badge variant="outline" className="text-xs font-medium border-slate-300 text-slate-600">
+            <Badge
+              variant="outline"
+              className="text-xs font-medium border-slate-300 text-slate-600"
+            >
               {exercise.secondary_bodypart}
             </Badge>
           )}
         </div>
       </CardHeader>
-      
+
       <CardFooter className="pt-0">
-        <Button variant="secondary" size="sm" className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors" asChild>
+        <Button
+          variant="secondary"
+          size="sm"
+          className="w-full group-hover:bg-primary group-hover:text-primary-foreground transition-colors"
+          asChild
+        >
           <Link
             href={`/protected/dashboard/workouts/exercise/${exercise.id.toString()}`}
           >

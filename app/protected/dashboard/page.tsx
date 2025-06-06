@@ -1,5 +1,5 @@
 import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
+
 import ConditionalHeader from '@/components/dashboard/conditional-header'
 import {
   WorkoutHistory,
@@ -7,6 +7,7 @@ import {
   ExerciseLibrary,
   UpcomingWorkouts,
 } from '@/features/dashboard'
+import { createClient } from '@/lib/supabase/server'
 
 export default async function GymDashboardPage() {
   const supabase = await createClient()

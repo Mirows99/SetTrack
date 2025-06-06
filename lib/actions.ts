@@ -1,8 +1,10 @@
 'use server'
 
 import { revalidatePath } from 'next/cache'
-import prisma from '@/lib/prisma'
+
 import { z } from 'zod'
+
+import prisma from '@/lib/prisma'
 
 // Validation schemas
 const CreateExerciseSchema = z.object({

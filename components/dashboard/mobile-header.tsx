@@ -1,10 +1,12 @@
 'use client'
 
+import { useRouter } from 'next/navigation'
+
 import { LogOutIcon, SettingsIcon } from 'lucide-react'
+
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { useSupabase } from '@/providers/supabase-provider'
-import { useRouter } from 'next/navigation'
 
 export default function MobileHeader() {
   const router = useRouter()

@@ -1,12 +1,17 @@
 'use client'
 
 import { useState, useEffect, use } from 'react'
+
+import Link from 'next/link'
+
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Plus, ArrowLeft, Minus } from 'lucide-react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+
+import { AnalyticsCard } from '@/components/analytics-card'
 import { Button } from '@/components/ui/button'
 import { Card } from '@/components/ui/card'
-import { Input } from '@/components/ui/input'
-import Link from 'next/link'
-import { Plus, ArrowLeft, Minus } from 'lucide-react'
-import { AnalyticsCard } from '@/components/analytics-card'
 import {
   Drawer,
   DrawerContent,
@@ -21,13 +26,11 @@ import {
   FormItem,
   FormMessage,
 } from '@/components/ui/form'
-import { useForm } from 'react-hook-form'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { z } from 'zod'
-import { cn } from '@/lib/utils'
-import { getExerciseById, getSets, createSet } from '@/lib/actions'
-import { useSupabase } from '@/providers/supabase-provider'
+import { Input } from '@/components/ui/input'
 import { ExerciseLoadingSkeleton } from '@/features/workouts'
+import { getExerciseById, getSets, createSet } from '@/lib/actions'
+import { cn } from '@/lib/utils'
+import { useSupabase } from '@/providers/supabase-provider'
 
 type Exercise = {
   id: bigint

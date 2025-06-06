@@ -1,6 +1,7 @@
 'use client'
 
 import { ReactNode } from 'react'
+
 import BottomTabNavigation from '@/components/dashboard/bottom-tab-navigation'
 import { useIsMobile } from '@/hooks/use-mobile'
 

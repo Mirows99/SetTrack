@@ -1,7 +1,7 @@
 import { redirect } from 'next/navigation'
-import { createClient } from '@/lib/supabase/server'
+
 import ConditionalHeader from '@/components/dashboard/conditional-header'
-import { ProfileForm } from '@/features/profile'
+import ExercisePreferences from '@/components/dashboard/exercise-preferences'
 import {
   Card,
   CardContent,
@@ -9,7 +9,8 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import ExercisePreferences from '@/components/dashboard/exercise-preferences'
+import { ProfileForm } from '@/features/profile'
+import { createClient } from '@/lib/supabase/server'
 
 export default async function ProfilePage() {
   const supabase = await createClient()

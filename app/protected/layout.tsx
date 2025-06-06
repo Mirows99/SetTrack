@@ -1,6 +1,7 @@
 'use client'
 
 import { ReactNode } from 'react'
+
 import { useIsMobile } from '@/hooks/use-mobile'
 
 interface ProtectedLayoutProps {

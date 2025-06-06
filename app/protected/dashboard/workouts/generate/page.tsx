@@ -1,15 +1,18 @@
 'use client'
 
 import { useState } from 'react'
+
+import Link from 'next/link'
 import { useRouter } from 'next/navigation'
+
+import { ArrowLeft, Target, Clock, MapPin } from 'lucide-react'
+
+import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Label } from '@/components/ui/label'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group'
-import { Checkbox } from '@/components/ui/checkbox'
-import { ArrowLeft, Target, Clock, MapPin } from 'lucide-react'
-import Link from 'next/link'
 
 // Type definitions for form data
 interface WorkoutPreferences {

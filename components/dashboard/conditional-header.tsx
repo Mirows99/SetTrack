@@ -1,7 +1,9 @@
 'use client'
 
 import { User } from '@supabase/supabase-js'
+
 import { useIsMobile } from '@/hooks/use-mobile'
+
 import DashboardHeader from './header'
 import MobileHeader from './mobile-header'
 

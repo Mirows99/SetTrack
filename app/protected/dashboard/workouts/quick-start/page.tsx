@@ -1,13 +1,16 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { Search, PlusCircle, ArrowUpDown, ArrowLeft } from 'lucide-react'
+
 import Link from 'next/link'
-import { getExercises } from '@/lib/actions'
+
+import { Search, PlusCircle, ArrowUpDown, ArrowLeft } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { EmptyExercisesState, ExerciseCard } from '@/features/workouts'
+import { getExercises } from '@/lib/actions'
 import { Prisma } from '@/lib/generated/prisma'
 import { useSupabase } from '@/providers/supabase-provider'
 
@@ -53,7 +56,9 @@ const muscleGroupsByRegion = {
 export default function QuickStartPage() {
   const [exercises, setExercises] = useState<ExerciseWithIncludes[]>([])
   const [loading, setLoading] = useState(true)
-  const [selectedRegion, setSelectedRegion] = useState<'UPPER' | 'LOWER' | ''>('')
+  const [selectedRegion, setSelectedRegion] = useState<'UPPER' | 'LOWER' | ''>(
+    ''
+  )
   const [selectedMuscleGroup, setSelectedMuscleGroup] = useState<string>('')
   const { user } = useSupabase()
 
@@ -67,11 +72,11 @@ export default function QuickStartPage() {
 
       try {
         const exercisesResult = await getExercises(user.id)
-        
+
         if (!exercisesResult.success) {
           console.error('Error fetching exercises:', exercisesResult.error)
         }
-        
+
         setExercises(exercisesResult.data || [])
       } catch (error) {
         console.error('Unexpected error fetching exercises:', error)
@@ -86,7 +91,8 @@ export default function QuickStartPage() {
   // Update selected muscle group when region changes
   useEffect(() => {
     if (selectedRegion) {
-      const defaultMuscleGroup = muscleGroupsByRegion[selectedRegion as 'UPPER' | 'LOWER'][0]?.id
+      const defaultMuscleGroup =
+        muscleGroupsByRegion[selectedRegion as 'UPPER' | 'LOWER'][0]?.id
       setSelectedMuscleGroup(defaultMuscleGroup || '')
     } else {
       setSelectedMuscleGroup('')
@@ -94,18 +100,22 @@ export default function QuickStartPage() {
   }, [selectedRegion])
 
   // Group exercises by body region and muscle group (only when region is selected)
-  const exercisesByRegionAndBodyPart = selectedRegion ? 
-    muscleGroupsByRegion[selectedRegion as 'UPPER' | 'LOWER'].reduce(
-      (muscleAcc: Record<string, ExerciseWithIncludes[]>, muscle: { id: string; name: string }) => {
-        muscleAcc[muscle.id] = exercises.filter(
-          (ex) => 
-            ex.body_region?.toUpperCase() === selectedRegion &&
-            ex.primary_bodypart?.toLowerCase() === muscle.id
-        )
-        return muscleAcc
-      },
-      {} as Record<string, ExerciseWithIncludes[]>
-    ) : {}
+  const exercisesByRegionAndBodyPart = selectedRegion
+    ? muscleGroupsByRegion[selectedRegion as 'UPPER' | 'LOWER'].reduce(
+        (
+          muscleAcc: Record<string, ExerciseWithIncludes[]>,
+          muscle: { id: string; name: string }
+        ) => {
+          muscleAcc[muscle.id] = exercises.filter(
+            (ex) =>
+              ex.body_region?.toUpperCase() === selectedRegion &&
+              ex.primary_bodypart?.toLowerCase() === muscle.id
+          )
+          return muscleAcc
+        },
+        {} as Record<string, ExerciseWithIncludes[]>
+      )
+    : {}
 
   if (loading) {
     return (
@@ -160,8 +170,8 @@ export default function QuickStartPage() {
       <Tabs value={selectedRegion} className="w-full">
         <TabsList className="grid grid-cols-2 mb-4">
           {bodyRegions.map((region) => (
-            <TabsTrigger 
-              key={region.id} 
+            <TabsTrigger
+              key={region.id}
               value={region.id}
               onClick={(e) => {
                 e.preventDefault()
@@ -182,42 +192,51 @@ export default function QuickStartPage() {
         {selectedRegion && (
           <Tabs value={selectedMuscleGroup} className="w-full">
             <TabsList className="flex overflow-x-auto sm:grid sm:grid-cols-6 mb-4">
-              {muscleGroupsByRegion[selectedRegion as 'UPPER' | 'LOWER'].map((muscle) => (
-                <TabsTrigger 
-                  key={muscle.id} 
-                  value={muscle.id}
-                  className="flex-shrink-0"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    // If clicking the same muscle group, deselect it
-                    if (muscle.id === selectedMuscleGroup) {
-                      setSelectedMuscleGroup('')
-                    } else {
-                      setSelectedMuscleGroup(muscle.id)
-                    }
-                  }}
-                >
-                  {muscle.name}
-                </TabsTrigger>
-              ))}
+              {muscleGroupsByRegion[selectedRegion as 'UPPER' | 'LOWER'].map(
+                (muscle) => (
+                  <TabsTrigger
+                    key={muscle.id}
+                    value={muscle.id}
+                    className="flex-shrink-0"
+                    onClick={(e) => {
+                      e.preventDefault()
+                      // If clicking the same muscle group, deselect it
+                      if (muscle.id === selectedMuscleGroup) {
+                        setSelectedMuscleGroup('')
+                      } else {
+                        setSelectedMuscleGroup(muscle.id)
+                      }
+                    }}
+                  >
+                    {muscle.name}
+                  </TabsTrigger>
+                )
+              )}
             </TabsList>
 
             {/* Show all exercises for the selected region when no muscle group is selected */}
             {!selectedMuscleGroup && (
               <div className="mt-4">
                 <h3 className="text-lg font-medium mb-4">
-                  All {bodyRegions.find(r => r.id === selectedRegion)?.name} Exercises
+                  All {bodyRegions.find((r) => r.id === selectedRegion)?.name}{' '}
+                  Exercises
                 </h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {exercises.filter((ex) => ex.body_region?.toUpperCase() === selectedRegion).length > 0 ? (
+                  {exercises.filter(
+                    (ex) => ex.body_region?.toUpperCase() === selectedRegion
+                  ).length > 0 ? (
                     exercises
-                      .filter((ex) => ex.body_region?.toUpperCase() === selectedRegion)
+                      .filter(
+                        (ex) => ex.body_region?.toUpperCase() === selectedRegion
+                      )
                       .map((exercise) => (
                         <ExerciseCard key={exercise.id} exercise={exercise} />
                       ))
                   ) : (
                     <div className="col-span-full">
-                      <EmptyExercisesState groupName={`${bodyRegions.find(r => r.id === selectedRegion)?.name} exercises`} />
+                      <EmptyExercisesState
+                        groupName={`${bodyRegions.find((r) => r.id === selectedRegion)?.name} exercises`}
+                      />
                     </div>
                   )}
                 </div>
@@ -225,19 +244,31 @@ export default function QuickStartPage() {
             )}
 
             {/* Exercise Content for specific muscle groups */}
-            {selectedMuscleGroup && muscleGroupsByRegion[selectedRegion as 'UPPER' | 'LOWER'].map((muscle) => (
-              <TabsContent key={muscle.id} value={muscle.id} className="mt-0">
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {exercisesByRegionAndBodyPart[muscle.id]?.length > 0 ? (
-                    exercisesByRegionAndBodyPart[muscle.id].map((exercise) => (
-                      <ExerciseCard key={exercise.id} exercise={exercise} />
-                    ))
-                  ) : (
-                    <EmptyExercisesState groupName={muscle.name} />
-                  )}
-                </div>
-              </TabsContent>
-            ))}
+            {selectedMuscleGroup &&
+              muscleGroupsByRegion[selectedRegion as 'UPPER' | 'LOWER'].map(
+                (muscle) => (
+                  <TabsContent
+                    key={muscle.id}
+                    value={muscle.id}
+                    className="mt-0"
+                  >
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                      {exercisesByRegionAndBodyPart[muscle.id]?.length > 0 ? (
+                        exercisesByRegionAndBodyPart[muscle.id].map(
+                          (exercise) => (
+                            <ExerciseCard
+                              key={exercise.id}
+                              exercise={exercise}
+                            />
+                          )
+                        )
+                      ) : (
+                        <EmptyExercisesState groupName={muscle.name} />
+                      )}
+                    </div>
+                  </TabsContent>
+                )
+              )}
           </Tabs>
         )}
       </Tabs>

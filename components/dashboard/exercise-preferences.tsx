@@ -1,6 +1,9 @@
 'use client'
 
 import { useState } from 'react'
+
+import { Star } from 'lucide-react'
+
 import {
   Accordion,
   AccordionContent,
@@ -8,7 +11,6 @@ import {
   AccordionTrigger,
 } from '@/components/ui/accordion'
 import { Button } from '@/components/ui/button'
-import { Star } from 'lucide-react'
 
 // TODO: Fetch exercises from the database
 const exercises = [

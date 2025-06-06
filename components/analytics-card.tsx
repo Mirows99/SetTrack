@@ -1,9 +1,13 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import Link from 'next/link'
+
 import Image from 'next/image'
+import Link from 'next/link'
+
 import { BarChart3, ChevronDown, ChevronUp } from 'lucide-react'
+
+import { Button } from '@/components/ui/button'
 import {
   Card,
   CardContent,
@@ -12,7 +16,6 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
 import { useSupabase } from '@/providers/supabase-provider'
 
 interface AnalyticsCardProps {
