@@ -2,9 +2,9 @@ import { Geist, Geist_Mono } from 'next/font/google'
 import localFont from 'next/font/local'
 
 import './globals.css'
+import { FloatingTimer } from '@/components/timer-floating'
 import { SupabaseProvider } from '@/providers/supabase-provider'
 import { TimerProvider } from '@/providers/timer-provider'
-import { FloatingTimer } from '@/components/timer-floating'
 
 import type { Metadata } from 'next'
 

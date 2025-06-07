@@ -1,6 +1,12 @@
 'use client'
 
-import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from 'react'
 
 interface TimerContextType {
   isRunning: boolean
@@ -112,4 +118,4 @@ export function TimerProvider({ children }: TimerProviderProps) {
       {children}
     </TimerContext.Provider>
   )
-} 
+}

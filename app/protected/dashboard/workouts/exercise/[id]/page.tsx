@@ -178,7 +178,7 @@ export default function ExercisePage({
       // Reset form and close drawer
       form.reset()
       setIsDrawerOpen(false)
-      
+
       // Start the rest timer (1:30 = 90 seconds)
       startTimer(90)
     } catch (error) {
