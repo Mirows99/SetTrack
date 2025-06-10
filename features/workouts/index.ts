@@ -11,3 +11,4 @@ export {
 } from './components/workout-option-card'
 export { EmptyExercisesState } from './components/empty-exercises-state'
 export { ExerciseCard } from './components/exercise-card'
+export { CreateExerciseDialog } from './components/create-exercise-dialog'

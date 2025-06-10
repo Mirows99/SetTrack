@@ -4,12 +4,12 @@ import { useState, useEffect } from 'react'
 
 import Link from 'next/link'
 
-import { Search, PlusCircle, ArrowUpDown, ArrowLeft } from 'lucide-react'
+import { Search, ArrowUpDown, ArrowLeft } from 'lucide-react'
 
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { EmptyExercisesState, ExerciseCard } from '@/features/workouts'
+import { EmptyExercisesState, ExerciseCard, CreateExerciseDialog } from '@/features/workouts'
 import { getExercises } from '@/lib/actions'
 import { Prisma } from '@/lib/generated/prisma'
 import { useSupabase } from '@/providers/supabase-provider'
@@ -43,7 +43,7 @@ const muscleGroupsByRegion = {
     { id: 'shoulders', name: 'Shoulders' },
     { id: 'biceps', name: 'Biceps' },
     { id: 'triceps', name: 'Triceps' },
-    { id: 'core', name: 'Core' },
+    { id: 'abs', name: 'Abs' },
   ],
   LOWER: [
     { id: 'quads', name: 'Quads' },
@@ -159,10 +159,18 @@ export default function QuickStartPage() {
             <ArrowUpDown className="h-4 w-4 mr-2" />
             Sort
           </Button>
-          <Button size="sm">
-            <PlusCircle className="h-4 w-4 mr-2" />
-            Create Exercise
-          </Button>
+          <CreateExerciseDialog 
+            onExerciseCreated={() => {
+              // Refresh the exercises list when a new exercise is created
+              if (user?.id) {
+                getExercises(user.id).then((result) => {
+                  if (result.success) {
+                    setExercises(result.data || [])
+                  }
+                })
+              }
+            }}
+          />
         </div>
       </div>
 
