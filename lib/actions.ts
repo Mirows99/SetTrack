@@ -393,6 +393,9 @@ export async function createOrUpdateUserProfile(
     fitness_level?: string
     goal?: string
     weight_history?: number[]
+    gender?: string
+    bio?: string
+    height?: string
   }
 ) {
   try {

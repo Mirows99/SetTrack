@@ -9,7 +9,7 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
-import { ProfileForm } from '@/features/profile'
+import { ProfileContainer } from '@/features/profile'
 import { createClient } from '@/lib/supabase/server'
 
 export default async function ProfilePage() {
@@ -35,7 +35,7 @@ export default async function ProfilePage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="space-y-6">
-          <ProfileForm user={data.user} />
+          <ProfileContainer user={data.user} />
 
           <ExercisePreferences />
         </div>

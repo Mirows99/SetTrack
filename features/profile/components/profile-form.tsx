@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { User } from '@supabase/supabase-js'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
@@ -33,22 +33,22 @@ import {
   CardTitle,
 } from '@/components/ui/card'
 import { toast } from 'sonner'
-import { useSupabase } from '@/providers/supabase-provider'
+import { createOrUpdateUserProfile } from '@/lib/actions'
 
 const profileFormSchema = z.object({
   fullName: z.string().min(2, {
     message: 'Name must be at least 2 characters.',
   }),
-  age: z.coerce.number().min(0, {
+  age: z.coerce.number().min(1, {
     message: 'Age must be a positive number.',
   }),
   gender: z.string().min(1, {
     message: 'Please select a gender.',
   }),
-  height: z.coerce.number().min(0, {
+  height: z.coerce.number().min(1, {
     message: 'Height must be a positive number.',
   }),
-  weight: z.coerce.number().min(0, {
+  weight: z.coerce.number().min(1, {
     message: 'Weight must be a positive number.',
   }),
   fitnessLevel: z.string().min(1, {
@@ -66,22 +66,29 @@ type ProfileFormValues = z.infer<typeof profileFormSchema>
 
 interface ProfileFormProps {
   user: User
+  existingData?: any
+  onSuccess?: () => void
+  onCancel?: () => void
 }
 
-export default function ProfileForm({ user }: ProfileFormProps) {
+export default function ProfileForm({
+  user,
+  existingData,
+  onSuccess,
+  onCancel,
+}: ProfileFormProps) {
   const [isSaving, setIsSaving] = useState(false)
-  const { supabase } = useSupabase()
 
   // Default values for the form
   const defaultValues: Partial<ProfileFormValues> = {
-    fullName: '',
-    age: 0,
-    gender: '',
-    height: 0,
-    weight: 0,
-    fitnessLevel: '',
-    goal: '',
-    bio: '',
+    fullName: existingData?.name || '',
+    age: existingData?.age || 0,
+    gender: existingData?.gender || '',
+    height: existingData?.height || 0,
+    weight: existingData?.weight || 0,
+    fitnessLevel: existingData?.fitness_level || '',
+    goal: existingData?.goal || '',
+    bio: existingData?.bio || '',
   }
 
   const form = useForm<ProfileFormValues>({
@@ -90,31 +97,49 @@ export default function ProfileForm({ user }: ProfileFormProps) {
     mode: 'onChange',
   })
 
+  // Update form values when existingData changes
+  useEffect(() => {
+    if (existingData) {
+      form.reset({
+        fullName: existingData.name || '',
+        age: existingData.age || 0,
+        gender: existingData.gender || '',
+        height: existingData.height || 0,
+        weight: existingData.weight || 0,
+        fitnessLevel: existingData.fitness_level || '',
+        goal: existingData.goal || '',
+        bio: existingData.bio || '',
+      })
+    }
+  }, [existingData, form])
+
   async function onSubmit(data: ProfileFormValues) {
     setIsSaving(true)
 
     try {
-      const { error } = await supabase.from('user_profiles').insert({
-        user_id: user.id,
+      const result = await createOrUpdateUserProfile(user.id, {
         name: data.fullName,
         age: data.age,
-        gender: data.gender,
-        height: data.height,
         weight: data.weight,
         fitness_level: data.fitnessLevel,
         goal: data.goal,
+        gender: data.gender,
         bio: data.bio,
+        height: data.height.toString(), // Convert number to string as per schema
       })
 
-      if (error) {
-        console.error('Error saving Profile:', error)
-        alert(`Failed to save Profile: ${error.message || 'Unknown error'}`)
-        return
+      if (result.success) {
+        toast.success(
+          existingData
+            ? 'Profile updated successfully'
+            : 'Profile created successfully'
+        )
+        onSuccess?.()
+      } else {
+        toast.error(result.error || 'Failed to save profile')
       }
-
-      toast.success('Profile updated successfully')
     } catch (error) {
-      toast.error('Failed to update profile')
+      toast.error('Failed to save profile')
       console.error(error)
     } finally {
       setIsSaving(false)
@@ -124,9 +149,13 @@ export default function ProfileForm({ user }: ProfileFormProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Personal Information</CardTitle>
+        <CardTitle>
+          {existingData ? 'Edit Profile' : 'Create Your Profile'}
+        </CardTitle>
         <CardDescription>
-          Update your profile information and preferences
+          {existingData
+            ? 'Update your profile information and preferences'
+            : 'Tell us about yourself to get personalized workout recommendations'}
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -165,7 +194,7 @@ export default function ProfileForm({ user }: ProfileFormProps) {
                 control={form.control}
                 name="gender"
                 render={({ field }) => (
-                  <FormItem>
+                  <FormItem className="overflow-hidden">
                     <FormLabel>Gender</FormLabel>
                     <Select
                       onValueChange={field.onChange}
@@ -297,16 +326,27 @@ export default function ProfileForm({ user }: ProfileFormProps) {
                     />
                   </FormControl>
                   <FormDescription>
-                    You can <span>@mention</span> other users and organizations.
+                    Share your fitness story and what motivates you.
                   </FormDescription>
                   <FormMessage />
                 </FormItem>
               )}
             />
 
-            <Button type="submit" disabled={isSaving}>
-              {isSaving ? 'Saving...' : 'Save Changes'}
-            </Button>
+            <div className="flex gap-3">
+              <Button type="submit" disabled={isSaving}>
+                {isSaving
+                  ? 'Saving...'
+                  : existingData
+                    ? 'Update Profile'
+                    : 'Create Profile'}
+              </Button>
+              {onCancel && (
+                <Button type="button" variant="outline" onClick={onCancel}>
+                  Cancel
+                </Button>
+              )}
+            </div>
           </form>
         </Form>
       </CardContent>

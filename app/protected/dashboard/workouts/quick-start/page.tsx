@@ -9,7 +9,11 @@ import { Search, ArrowUpDown, ArrowLeft } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { EmptyExercisesState, ExerciseCard, CreateExerciseDialog } from '@/features/workouts'
+import {
+  EmptyExercisesState,
+  ExerciseCard,
+  CreateExerciseDialog,
+} from '@/features/workouts'
 import { getExercises } from '@/lib/actions'
 import { Prisma } from '@/lib/generated/prisma'
 import { useSupabase } from '@/providers/supabase-provider'
@@ -159,7 +163,7 @@ export default function QuickStartPage() {
             <ArrowUpDown className="h-4 w-4 mr-2" />
             Sort
           </Button>
-          <CreateExerciseDialog 
+          <CreateExerciseDialog
             onExerciseCreated={() => {
               // Refresh the exercises list when a new exercise is created
               if (user?.id) {
